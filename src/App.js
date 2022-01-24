@@ -1,14 +1,21 @@
 import * as THREE from 'three';
 
 //scene
-let canvas, scene, renderer;
+let canvas, camera, scene, renderer;
 //params
 let params = {
 	sceneWidth: 850,
 	sceneHeight: 450,
-	bgSrc: './assets/img/interaction_bg.jpeg',
+	bgSrc: './assets/background.jpg',
 	EarthTextSrc: './assets/Earth.png',
+	EarthMeshName: 'EarthMesh',
+	recreaseRotationRate: 0.1
 }
+let raycaster = new THREE.Raycaster(), 
+	EarthClicked = {
+		isActive: false,
+		mouse: new THREE.Vector2()
+	}
 
 class App {
 	init() {
@@ -17,47 +24,72 @@ class App {
 		canvas.setAttribute('height', 	params.sceneHeight);
 		
 		scene = new THREE.Scene();
-		const camera = new THREE.PerspectiveCamera(40.0, params.sceneWidth / params.sceneHeight, 0.1, 5000);
+		camera = new THREE.PerspectiveCamera(40.0, params.sceneWidth / params.sceneHeight, 0.1, 5000);
 		camera.position.set(0, 0, 100);
 
 		const light = new THREE.AmbientLight(0xffffff);
 		scene.add(light);
 
+		//Load background texture
 		let textureLoader = new THREE.TextureLoader();
-		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
+		textureLoader.load(params.bgSrc, function (texture) {
 			texture.minFilter = THREE.LinearFilter;
+			//scene.background = texture;
 		});
-		const EarthGeometry = new THREE.SphereGeometry( 15, 32, 16 );
-		const EarthMaterial = new THREE.MeshBasicMaterial( { map: EarthTexture } );
+		
+		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
+			texture.minFilter = THREE.LinearFilter;			
+		});
+		const EarthGeometry = new THREE.SphereGeometry( 25, 32, 32 );
+		const EarthMaterial = new THREE.MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.7, side: THREE.DoubleSide } );
 		const EarthMesh = new THREE.Mesh( EarthGeometry, EarthMaterial );
+		EarthMesh.name = params.EarthMeshName;
 		scene.add( EarthMesh );
 
 		//renderer
-		renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+		renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
 		renderer.setClearColor(0xffffff);
 
-		//Load background texture
-		/*
-		let loader = new THREE.TextureLoader();
-		loader.load(params.bgSrc, function (texture) {
-			texture.minFilter = THREE.LinearFilter;
-			scene.background = texture;
-		});
-		*/
 		renderer.render(scene, camera);
 		//window.addEventListener( 'resize', onWindowResize, false );
 		canvas.addEventListener('mousemove', onMouseMove, false);
 		canvas.addEventListener('mousedown', onMouseDown, false);
+		canvas.addEventListener('mouseup', onMouseUp, false);
 
 		animate();
 	}
 }
 
 function onMouseMove(event) {
+	if (EarthClicked.isActive){
+		const mouseVector = new THREE.Vector2();
+		mouseVector.x = (event.clientX / params.sceneWidth) * 2 - 1;
+		mouseVector.y = - (event.clientY / params.sceneHeight) * 2 + 1;
+
+		scene.getObjectByName(params.EarthMeshName).rotation.y += 
+			params.recreaseRotationRate * (mouseVector.x - EarthClicked.mouse.x);
+	}
 }
 
-function onMouseDown() {
+function onMouseDown(event) {
+	const clickVector = new THREE.Vector2();
+	clickVector.x = (event.clientX / params.sceneWidth) * 2 - 1;
+	clickVector.y = - (event.clientY / params.sceneHeight) * 2 + 1;
 	
+	raycaster.setFromCamera(clickVector, camera);
+	raycaster.layers.enableAll()
+	let intersects = []
+	raycaster.intersectObjects(scene.children, true, intersects);
+	
+	const isEarth = (element) => element.object.name === params.EarthMeshName;
+	if (intersects.some(isEarth)){
+		EarthClicked.isActive = true;
+		EarthClicked.mouse.copy(clickVector);
+	}
+}
+
+function onMouseUp() {
+	EarthClicked.isActive = false;
 }
 
 function onWindowResize() {
