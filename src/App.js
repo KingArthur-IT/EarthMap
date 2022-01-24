@@ -12,9 +12,11 @@ let params = {
 	recreaseRotationRate: 0.1
 }
 let raycaster = new THREE.Raycaster(), 
-	EarthClicked = {
+	EarthActive = {
 		isActive: false,
-		mouse: new THREE.Vector2()
+		mouse: new THREE.Vector2(),
+		rotation: 0,
+		rotationDecreaseStep: 0.0005
 	}
 
 class App {
@@ -61,13 +63,13 @@ class App {
 }
 
 function onMouseMove(event) {
-	if (EarthClicked.isActive){
+	if (EarthActive.isActive){
 		const mouseVector = new THREE.Vector2();
 		mouseVector.x = (event.clientX / params.sceneWidth) * 2 - 1;
 		mouseVector.y = - (event.clientY / params.sceneHeight) * 2 + 1;
 
-		scene.getObjectByName(params.EarthMeshName).rotation.y += 
-			params.recreaseRotationRate * (mouseVector.x - EarthClicked.mouse.x);
+		EarthActive.rotation = 
+			params.recreaseRotationRate * (mouseVector.x - EarthActive.mouse.x);
 	}
 }
 
@@ -83,13 +85,13 @@ function onMouseDown(event) {
 	
 	const isEarth = (element) => element.object.name === params.EarthMeshName;
 	if (intersects.some(isEarth)){
-		EarthClicked.isActive = true;
-		EarthClicked.mouse.copy(clickVector);
+		EarthActive.isActive = true;
+		EarthActive.mouse.copy(clickVector);
 	}
 }
 
 function onMouseUp() {
-	EarthClicked.isActive = false;
+	EarthActive.isActive = false;
 }
 
 function onWindowResize() {
@@ -99,6 +101,10 @@ function onWindowResize() {
 }
 
 function animate() {
+	if (Math.abs(EarthActive.rotation) > EarthActive.rotationDecreaseStep){
+		scene.getObjectByName(params.EarthMeshName).rotation.y += EarthActive.rotation;
+		EarthActive.rotation -= Math.sign(EarthActive.rotation) * EarthActive.rotationDecreaseStep;
+	}
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
