@@ -104,6 +104,7 @@ class App {
 				countryObject.size
 			);
 			const decalMesh = new THREE.Mesh(decalGeometry, decalMaterial);
+			decalMesh.name = countryObject.name;
 			EarthMesh.add(decalMesh);
 		})
 
@@ -150,11 +151,19 @@ function onMouseDown(event) {
 	let intersects = []
 	raycaster.intersectObjects(scene.children, true, intersects);
 	
+	//move earth only on click on it
 	const isEarth = (element) => element.object.name === params.EarthMeshName;
 	if (intersects.some(isEarth)){
 		earthParams.isActive = true;
 		earthParams.mouse.copy(clickVector);
-	}
+	};
+
+	//define click on country decal
+	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
+		if (intersects.some((e) => e.object.name == countryName)){
+			console.log(countryName)
+		}
+	})
 }
 
 function onMouseUp() {
