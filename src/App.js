@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry'
 
 //scene
 let canvas, camera, scene, renderer;
@@ -15,13 +16,47 @@ let params = {
 	recreaseRotationRate: 0.1
 }
 let raycaster = new THREE.Raycaster(), 
-	EarthActive = {
+	earthParams = {
 		isActive: false,
 		mouse: new THREE.Vector2(),
 		frameRotationValue: 0,
 		rotationDecreaseStep: 0.0005,
 		minRotationValue: 0.0075
-	}
+	},
+	countriesArray = [
+		{
+			name: 'China',
+			coodsOnEarth: new THREE.Vector3(9.87, 2.24, -22.8),
+			normal: new THREE.Euler(0, 0, 0),
+			size: new THREE.Vector3(4, 4, 4),
+			imgPath: './assets/Countries/China.png'
+		},
+		{
+			name: 'UnitedKingdom',
+			coodsOnEarth: new THREE.Vector3(21, 10.7, 9.96),
+			normal: new THREE.Euler(0, 0.6, 0),
+			size: new THREE.Vector3(4, 4, 4),
+			imgPath: './assets/Countries/UnitedKingdom.png'
+		},{
+			name: 'Indonesia',
+			coodsOnEarth: new THREE.Vector3(4.41, -8.48, -23.05),
+			normal: new THREE.Euler(0, 0, 0),
+			size: new THREE.Vector3(4, 4, 4),
+			imgPath: './assets/Countries/Indonesia.png'
+		},{
+			name: 'Philippines',
+			coodsOnEarth: new THREE.Vector3(1.805, -4.96, -24.3),
+			normal: new THREE.Euler(0, 0, 0),
+			size: new THREE.Vector3(4, 4, 4),
+			imgPath: './assets/Countries/Philippines.png'
+		},{
+			name: 'Thailand',
+			coodsOnEarth: new THREE.Vector3(9.4, -3.71, -22.83),
+			normal: new THREE.Euler(0, 0, 0),
+			size: new THREE.Vector3(4, 4, 4),
+			imgPath: './assets/Countries/Thailand.png'
+		},
+	]
 
 class App {
 	init() {
@@ -35,7 +70,7 @@ class App {
 		const light = new THREE.AmbientLight(0xffffff);
 		scene.add(light);
 
-		//Load texture
+		//Load texture and Create Earth Mesh
 		let textureLoader = new THREE.TextureLoader();
 		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
 			texture.minFilter = THREE.LinearFilter;			
@@ -45,6 +80,32 @@ class App {
 		const EarthMesh = new THREE.Mesh( EarthGeometry, EarthMaterial );
 		EarthMesh.name = params.EarthMeshName;
 		scene.add( EarthMesh );
+
+		//decal countries
+		countriesArray.forEach((countryObject) => {
+			let countryTexture = textureLoader.load(countryObject.imgPath, function (texture) {
+				texture.minFilter = THREE.LinearFilter;			
+			});
+			const decalMaterial = new THREE.MeshPhongMaterial({
+				map: countryTexture,
+				flatShading: false,
+				shininess: 30, 
+				transparent: true,
+				depthTest: true,
+				depthWrite: false,
+				polygonOffset: true,
+				polygonOffsetFactor: -4,
+				wireframe: false
+			});
+			const decalGeometry = new DecalGeometry(
+				EarthMesh,
+				countryObject.coodsOnEarth,
+				countryObject.normal,
+				countryObject.size
+			);
+			const decalMesh = new THREE.Mesh(decalGeometry, decalMaterial);
+			EarthMesh.add(decalMesh);
+		})
 
 		//renderer
 		renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
@@ -70,12 +131,12 @@ function setSizes(){
 }
 
 function onMouseMove(event) {
-	if (EarthActive.isActive){
+	if (earthParams.isActive){
 		const mouseVector = new THREE.Vector2();
 		mouseVector.x = ((event.clientX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
 		mouseVector.y = - ((event.clientY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
 
-		EarthActive.frameRotationValue = params.recreaseRotationRate * (mouseVector.x - EarthActive.mouse.x);
+		earthParams.frameRotationValue = params.recreaseRotationRate * (mouseVector.x - earthParams.mouse.x);
 	}
 }
 
@@ -91,13 +152,13 @@ function onMouseDown(event) {
 	
 	const isEarth = (element) => element.object.name === params.EarthMeshName;
 	if (intersects.some(isEarth)){
-		EarthActive.isActive = true;
-		EarthActive.mouse.copy(clickVector);
+		earthParams.isActive = true;
+		earthParams.mouse.copy(clickVector);
 	}
 }
 
 function onMouseUp() {
-	EarthActive.isActive = false;
+	earthParams.isActive = false;
 }
 
 function onWindowResize() {
@@ -108,11 +169,13 @@ function onWindowResize() {
 }
 
 function animate() {
-	if (Math.abs(EarthActive.frameRotationValue) > EarthActive.rotationDecreaseStep){
-		EarthActive.frameRotationValue -= Math.sign(EarthActive.frameRotationValue) * EarthActive.rotationDecreaseStep;
+	
+	if (Math.abs(earthParams.frameRotationValue) > earthParams.rotationDecreaseStep){
+		earthParams.frameRotationValue -= Math.sign(earthParams.frameRotationValue) * earthParams.rotationDecreaseStep;
+		scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue );
 	}
-	let fixedRotationStep = (Math.sign(EarthActive.frameRotationValue) >= 0 ? 1 : -1) * EarthActive.minRotationValue;
-	scene.getObjectByName(params.EarthMeshName).rotation.y += (EarthActive.frameRotationValue + fixedRotationStep);
+	let fixedRotationStep = (Math.sign(earthParams.frameRotationValue) >= 0 ? 1 : -1) * earthParams.minRotationValue;
+	
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
