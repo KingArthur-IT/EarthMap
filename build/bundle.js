@@ -43221,7 +43221,7 @@
 		//define click on country decal
 		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 			if (intersects.some((e) => e.object.name == countryName)){
-				console.log(countryName);
+				document.getElementById(countryName).classList.add("selected");
 			}
 		});
 	}
@@ -43241,8 +43241,9 @@
 		
 		if (Math.abs(earthParams.frameRotationValue) > earthParams.rotationDecreaseStep){
 			earthParams.frameRotationValue -= Math.sign(earthParams.frameRotationValue) * earthParams.rotationDecreaseStep;
-			scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue );
 		}
+		let fixedRotationStep = (Math.sign(earthParams.frameRotationValue) >= 0 ? 1 : -1) * earthParams.minRotationValue;
+		scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep);
 		
 		requestAnimationFrame(animate);
 		renderer.render(scene, camera);
