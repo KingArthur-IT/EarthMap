@@ -1,0 +1,125 @@
+html,body { height: 100%; margin: 0;}
+#earthScene{
+    position: relative;
+    height: 100%;
+    background-image: url('./assets/bg.png');
+    background-size: cover;
+}
+#earthCanvas{
+    display: block;
+    margin: auto;
+    padding: 0;
+    transform: translateY(40%);
+}
+#UnitedKingdom{
+    top: 10%;
+    left: 15%;
+}
+#Thailand{
+    top: 35%;
+    left: 10%;
+}
+#Philippines{
+    top: 60%;
+    left: 15%;
+}
+#China{
+    top: 10%;
+    right: 20%;
+}
+#Indonesia{
+    top: 40%;
+    right: 13%
+}
+.country-item{
+    position: absolute;
+    color: #fff;
+}
+.country-item__hero{
+    
+}
+.country-item__header{
+    display: flex;
+    align-items: center;
+}
+.country-item__header img{
+    width: 62px;
+    height: 62px;
+}
+.country-item__description{
+    padding-left: 3%;
+    transition: all 0.75s;
+    transform: scaleY(0);
+    transform-origin: top;
+}
+.country-item__line{
+    margin: 0;
+    margin-bottom: 25px;
+    padding-left: 3%;
+}
+.country-item__line span{
+    margin-right: 5px;
+}
+.selected .country-item__description{
+    transform: scaleY(1);
+}
+.country-title{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+}
+.country-text{
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 140%;
+}
+@media screen and (max-width: 1366px) {
+    .country-title{
+        font-size: 24px;
+    }
+    .country-text{
+        font-size: 16px;
+        line-height: 22px;
+    }
+    .country-item__line{
+        margin-bottom: 20px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .country-title{
+        font-size: 20px;
+    }
+    .country-text{
+        font-size: 16px;
+        line-height: 22px;
+    }
+    .country-item__line{
+        margin-bottom: 20px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .country-title{
+        font-size: 16px;
+    }
+    .country-text{
+        font-size: 14px;
+        line-height: 14px;
+    }
+    .country-item__line{
+        margin-bottom: 10px;
+    }
+}
+@media screen and (max-width: 360px) {
+    .country-title{
+        font-size: 14px;
+        line-height: 12px;
+    }
+    .country-text{
+        font-size: 12px;
+    }
+    .country-item__line{
+        margin-bottom: 8px;
+    }
+}

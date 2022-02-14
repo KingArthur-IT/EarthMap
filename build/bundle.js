@@ -43082,7 +43082,8 @@
 			mouse: new Vector2(),
 			frameRotationValue: 0,
 			rotationDecreaseStep: 0.0005,
-			minRotationValue: 0.0075
+			minRotationValue: 0.0075,
+			isHover: 1
 		},
 		countriesArray = [
 			{
@@ -43126,7 +43127,9 @@
 			
 			scene = new Scene();
 			camera = new PerspectiveCamera(40.0, params.sceneWidth / params.sceneHeight, 0.1, 5000);
-			camera.position.set(0, 0, 100);
+			camera.position.set(0, 0, -100);  
+			camera.rotation.set(0, Math.PI, 0);  
+			scene.add(camera);
 
 			const light = new AmbientLight(0xffffff);
 			scene.add(light);
@@ -43156,7 +43159,8 @@
 					depthWrite: false,
 					polygonOffset: true,
 					polygonOffsetFactor: -4,
-					wireframe: false
+					wireframe: false,
+					side: FrontSide
 				});
 				const decalGeometry = new DecalGeometry(
 					EarthMesh,
@@ -43193,11 +43197,31 @@
 	}
 
 	function onMouseMove(event) {
+		//default values
+		document.body.style.cursor = 'default';
+		earthParams.isHover = 1;
+		//mouse vector
+		const mouseVector = new Vector2();
+		mouseVector.x = ((event.clientX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
+		mouseVector.y = - ((event.clientY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
+		//raycast
+		raycaster.setFromCamera(mouseVector, camera);
+		raycaster.layers.enableAll();
+		let intersects = [];
+		raycaster.intersectObjects(scene.children, true, intersects);
+		//stop rotating on hover
+		const isEarth = (element) => element.object.name === params.EarthMeshName;
+		if (intersects.some(isEarth)){
+			earthParams.isHover = 0;
+		}	//change curson on country hover
+		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
+			if (intersects.some((e) => e.object.name == countryName)){
+				document.body.style.cursor = 'pointer';
+			}
+		});
+		//move earth
 		if (earthParams.isActive){
-			const mouseVector = new Vector2();
-			mouseVector.x = ((event.clientX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
-			mouseVector.y = - ((event.clientY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
-
+			earthParams.isHover = 1;
 			earthParams.frameRotationValue = params.recreaseRotationRate * (mouseVector.x - earthParams.mouse.x);
 		}
 	}
@@ -43243,7 +43267,7 @@
 			earthParams.frameRotationValue -= Math.sign(earthParams.frameRotationValue) * earthParams.rotationDecreaseStep;
 		}
 		let fixedRotationStep = (Math.sign(earthParams.frameRotationValue) >= 0 ? 1 : -1) * earthParams.minRotationValue;
-		scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep);
+		scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.isHover;
 		
 		requestAnimationFrame(animate);
 		renderer.render(scene, camera);

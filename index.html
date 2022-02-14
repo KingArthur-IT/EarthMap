@@ -6,89 +6,109 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <title>Earth</title>
-    <style>
-        html,body { height: 100%; margin: 0;}
-        #earthScene{
-            position: relative;
-            height: 100%;
-            background-image: url('./assets/bg.png');
-            background-size: cover;
-        }
-        #earthCanvas{
-            display: block;
-            margin: auto;
-            padding: 0;
-            transform: translateY(40%);
-        }
-        .country-containter{
-            position: absolute;
-            color: #fff;
-        }
-        .country-item{
-            position: relative;
-            display: block;
-        }
-        .country-item svg{
-            position: absolute;
-            transform: scale(0.75);
-        }
-        .country-item__hero{
-            position: absolute;
-            transform: translateX(74%);
-            width: 200px;
-        }
-        .country-item__header{
-            display: flex;
-            align-items: center;
-        }
-        .country-item__header img{
-            width: 62px;
-            height: 62px;
-        }
-        .country-item__description{
-            padding: 3%;
-        }
-        svg path{
-            d: path("M426.54 110.144C407.599 133.467 391.007 145.063 374.424 149.407C357.836 153.752 341.17 150.865 322.014 145.031C314.348 142.696 306.288 139.89 297.687 136.896C263.327 124.933 220.318 109.96 159.132 109.96C120.937 109.96 90.6674 108.798 67.2433 106.483C43.8097 104.166 27.2655 100.699 16.4997 96.1087C5.72889 91.5159 0.880373 85.8656 0.521692 79.2388C0.158992 72.5378 4.35732 64.6168 12.2914 55.4394C50.1146 11.6892 94.4919 0.618946 148.567 0.500956C173.47 0.446618 200.411 2.71532 229.711 5.18265C232.239 5.3955 234.784 5.60982 237.347 5.82425C269.603 8.52317 304.655 11.2384 342.87 11.2397C382.677 15.4874 414.763 26.5639 431.298 43.3816C439.55 51.7747 443.917 61.5844 443.469 72.7036C443.019 83.8384 437.736 96.3575 426.54 110.144Z")
-        }
-        svg.selected path{
-            d: path("M469.674 282.478C448.718 342.262 430.96 379.031 413.497 400.587C404.772 411.358 396.134 418.314 387.225 422.45C378.319 426.584 369.11 427.916 359.218 427.391C349.317 426.866 338.74 424.481 327.102 421.186C320.818 419.407 314.255 417.371 307.33 415.224C301.406 413.387 295.217 411.468 288.713 409.557C260.553 401.284 226.795 393.268 184.538 393.268C100.343 393.268 48.5578 353.697 22.1689 302.433C-4.23814 251.133 -5.22879 188.094 12.2705 141.196C33.2137 85.0691 55.9525 49.9799 80.8742 28.8826C105.779 7.79978 132.908 0.653179 162.724 0.502443C190.201 0.363539 219.929 6.16365 252.295 12.4784C255.085 13.0226 257.894 13.5706 260.722 14.119C296.338 21.0233 335.061 27.9738 377.28 27.9805C421.119 38.8277 456.575 67.1057 474.905 110.303C493.248 153.528 494.466 211.749 469.674 282.478Z");
-            fill: url(#paint0_linear_1084_6763);
-        }
-    </style>
 </head>
 <body>
     <div id="earthScene">
-        <div class="country-containter">
-            <div class="country-item">
-                <svg id="UnitedKingdom" width="489" height="428" viewBox="0 0 489 428" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M426.54 110.144C407.599 133.467 391.007 145.063 374.424 149.407C357.836 153.752 341.17 150.865 322.014 145.031C314.348 142.696 306.288 139.89 297.687 136.896C263.327 124.933 220.318 109.96 159.132 109.96C120.937 109.96 90.6674 108.798 67.2433 106.483C43.8097 104.166 27.2655 100.699 16.4997 96.1087C5.72889 91.5159 0.880373 85.8656 0.521692 79.2388C0.158992 72.5378 4.35732 64.6168 12.2914 55.4394C50.1146 11.6892 94.4919 0.618946 148.567 0.500956C173.47 0.446618 200.411 2.71532 229.711 5.18265C232.239 5.3955 234.784 5.60982 237.347 5.82425C269.603 8.52317 304.655 11.2384 342.87 11.2397C382.677 15.4874 414.763 26.5639 431.298 43.3816C439.55 51.7747 443.917 61.5844 443.469 72.7036C443.019 83.8384 437.736 96.3575 426.54 110.144Z" stroke="url(#paint0_linear_1084_6747)"/>
-                    <defs>
-                        <linearGradient id="paint0_linear_1084_6747" x1="304.361" y1="-71.2783" x2="297.251" y2="41.1428" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#0A2B41"/>
-                            <stop offset="0.0001" stop-color="white"/>
-                            <stop offset="1" stop-color="white" stop-opacity="0"/>
-                        </linearGradient>
-                        <linearGradient id="paint0_linear_1084_6763" x1="734" y1="1129.5" x2="474.897" y2="39.3409" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#34FF3D"/>
-                            <stop offset="1" stop-color="#6AFFE4" stop-opacity="0"/>
-                        </linearGradient>
-                    </defs>
-                </svg>  
-                <div class="country-item__hero">
-                    <div class="country-item__header">
-                        <img src="/assets/Countries/UnitedKingdom.png" alt="UK">
-                        <p>United Kingdom</p>
-                    </div>
-                    <div class="country-item__description">
-                        <div><span>1m</span>tons of plastic</div>
-                        <div><span>17k</span>dyed mammals</div>
-                        <div><span>33%</span>plastic trash</div>
-                    </div>
+        <div class="country-item" id="UnitedKingdom">
+            <div class="country-item__hero">
+                <div class="country-item__header">
+                    <img src="/assets/Countries/UnitedKingdom.png" alt="UK">
+                    <p class="country-title">United Kingdom</p>
+                </div>
+                <div class="country-item__description country-text">
+                    <p class="country-item__line">
+                        <span class="country-title">1m</span>tons of plastic
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">17k</span>dyed mammals
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">33%</span>plastic trash
+                    </p>
                 </div>
             </div>
-        </div>   
+        </div>  
+        <div class="country-item" id="Thailand">
+            <div class="country-item__hero">
+                <div class="country-item__header">
+                    <img src="/assets/Countries/Thailand.png" alt="UK">
+                    <p class="country-title">Thailand</p>
+                </div>
+                <div class="country-item__description country-text">
+                    <p class="country-item__line">
+                        <span class="country-title">1m</span>tons of plastic
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">17k</span>dyed mammals
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">33%</span>plastic trash
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="country-item" id="Philippines">
+            <div class="country-item__hero">
+                <div class="country-item__header">
+                    <img src="/assets/Countries/Philippines.png" alt="UK">
+                    <p class="country-title">Philippines</p>
+                </div>
+                <div class="country-item__description country-text">
+                    <p class="country-item__line">
+                        <span class="country-title">1m</span>tons of plastic
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">17k</span>dyed mammals
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">33%</span>plastic trash
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="country-item" id="China">
+            <div class="country-item__hero">
+                <div class="country-item__header">
+                    <img src="/assets/Countries/China.png" alt="UK">
+                    <p class="country-title">China</p>
+                </div>
+                <div class="country-item__description country-text">
+                    <p class="country-item__line">
+                        <span class="country-title">1m</span>tons of plastic
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">17k</span>dyed mammals
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">33%</span>plastic trash
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="country-item" id="Indonesia">
+            <div class="country-item__hero">
+                <div class="country-item__header">
+                    <img src="/assets/Countries/Indonesia.png" alt="UK">
+                    <p class="country-title">Indonesia</p>
+                </div>
+                <div class="country-item__description country-text">
+                    <p class="country-item__line">
+                        <span class="country-title">1m</span>tons of plastic
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">17k</span>dyed mammals
+                    </p>
+                    <p class="country-item__line">
+                        <span class="country-title">33%</span>plastic trash
+                    </p>
+                </div>
+            </div>
+        </div>
         <canvas id="earthCanvas"></canvas>
     </div>
     <script src="./build/bundle.js"></script>
