@@ -43074,7 +43074,8 @@
 		EarthMeshName: 'EarthMesh',
 		canvasId: 'earthCanvas',
 		containerId: 'earthScene',
-		recreaseRotationRate: 0.1
+		recreaseRotationRate: 0.1,
+		currentSelectedCountry: ''
 	};
 	let raycaster = new Raycaster(), 
 		earthParams = {
@@ -43182,6 +43183,15 @@
 			canvas.addEventListener('mousemove', onMouseMove, false);
 			canvas.addEventListener('mousedown', onMouseDown, false);
 			canvas.addEventListener('mouseup', onMouseUp, false);
+			document.getElementById('earthScene').addEventListener('click', () => {
+				countriesArray.map((i) => {return i.name}).forEach((countryName) => {
+					document.getElementById(countryName).classList.remove("selected");
+					if (countryName === params.currentSelectedCountry){
+						document.getElementById(countryName).classList.add("selected");
+						params.currentSelectedCountry = '';
+					}
+				});
+			});
 
 			animate();
 		}
@@ -43245,7 +43255,8 @@
 		//define click on country decal
 		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 			if (intersects.some((e) => e.object.name == countryName)){
-				document.getElementById(countryName).classList.add("selected");
+				params.currentSelectedCountry = countryName;
+				//document.getElementById(countryName).classList.add("selected");
 			}
 		});
 	}

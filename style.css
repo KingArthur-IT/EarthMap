@@ -12,12 +12,12 @@ html,body { height: 100%; margin: 0;}
     transform: translateY(40%);
 }
 #UnitedKingdom{
-    top: 10%;
+    top: 2%;
     left: 15%;
 }
 #Thailand{
-    top: 35%;
-    left: 10%;
+    top: 30%;
+    left: 7%;
 }
 #Philippines{
     top: 60%;
@@ -28,7 +28,7 @@ html,body { height: 100%; margin: 0;}
     right: 20%;
 }
 #Indonesia{
-    top: 40%;
+    top: 45%;
     right: 13%
 }
 .country-item{
@@ -36,7 +36,19 @@ html,body { height: 100%; margin: 0;}
     color: #fff;
 }
 .country-item__hero{
-    
+    background-image: url('./assets/Countries/UnitedKingdomBg.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding: 20%;
+    min-width: 160%;
+    transition: all 1s;
+}
+.country-item.selected .country-item__hero{
+    background-image: url('./assets/Countries/selected.png');
+}
+#UnitedKingdom .country-item__hero{
+    padding: 15%;
+    min-width: 110%;
 }
 .country-item__header{
     display: flex;
