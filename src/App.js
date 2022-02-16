@@ -119,9 +119,14 @@ class App {
 
 		renderer.render(scene, camera);
 		window.addEventListener('resize', onWindowResize, false );
+		//mouse
 		canvas.addEventListener('mousemove', onMouseMove, false);
 		canvas.addEventListener('mousedown', onMouseDown, false);
 		canvas.addEventListener('mouseup', onMouseUp, false);
+		//touch
+		canvas.addEventListener("touchmove", onTouchMove);    
+		canvas.addEventListener("touchstart", onTouchStart);
+		canvas.addEventListener("touchend",  onMouseUp);
 		//toggle selected country
 		document.getElementById('earthScene').addEventListener('click', () => {
 			countriesArray.map((i) => {return i.name}).forEach((countryName) => {
@@ -205,6 +210,72 @@ function onMouseDown(event) {
 
 function onMouseUp() {
 	earthParams.isActive = false;
+}
+
+function onTouchMove(e) {
+	//default values
+	document.body.style.cursor = 'default';
+	earthParams.isHover = 1;
+	//mouse vector
+	const mouseVector = new THREE.Vector2();
+	let evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
+	let touch = evt.touches[0] || evt.changedTouches[0];
+	let newPosX = parseInt(touch.pageX);
+	let newPosY = parseInt(touch.pageY);
+	mouseVector.x = ((newPosX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
+	mouseVector.y = - ((newPosY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
+	//raycast
+	raycaster.setFromCamera(mouseVector, camera);
+	raycaster.layers.enableAll()
+	let intersects = []
+	raycaster.intersectObjects(scene.children, true, intersects);
+	//stop rotating on hover
+	const isEarth = (element) => element.object.name === params.EarthMeshName;
+	if (intersects.some(isEarth)){
+		earthParams.isHover = 0;
+	};
+	//change curson on country hover
+	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
+		if (intersects.some((e) => e.object.name == countryName)){
+			document.body.style.cursor = 'pointer'
+		}
+	})
+	//move earth
+	if (earthParams.isActive){
+		earthParams.isHover = 1;
+		earthParams.frameRotationValue = params.recreaseRotationRate * (mouseVector.x - earthParams.mouse.x);
+	}
+}
+
+function onTouchStart(e) {
+	//mouse vector
+	const clickVector = new THREE.Vector2();
+	let evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
+	let touch = evt.touches[0] || evt.changedTouches[0];
+	let newPosX = parseInt(touch.pageX);
+	let newPosY = parseInt(touch.pageY);
+	clickVector.x = ((newPosX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
+	clickVector.y = - ((newPosY - params.canvasPositionX) / params.sceneHeight) * 2 + 1;
+	
+	raycaster.setFromCamera(clickVector, camera);
+	raycaster.layers.enableAll()
+	let intersects = []
+	raycaster.intersectObjects(scene.children, true, intersects);
+	
+	//move earth only on click on it
+	const isEarth = (element) => element.object.name === params.EarthMeshName;
+	if (intersects.some(isEarth)){
+		earthParams.isActive = true;
+		earthParams.mouse.copy(clickVector);
+	};
+
+	//define click on country decal
+	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
+		if (intersects.some((e) => e.object.name == countryName)){
+			params.currentSelectedCountry = countryName;
+			//document.getElementById(countryName).classList.add("selected");
+		}
+	})
 }
 
 function onWindowResize() {

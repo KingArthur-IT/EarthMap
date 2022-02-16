@@ -4,6 +4,7 @@ html,body { height: 100%; margin: 0;}
     height: 100%;
     background-image: url('./assets/bg.png');
     background-size: cover;
+    overflow: hidden;
 }
 #earthCanvas{
     display: block;
@@ -29,21 +30,47 @@ html,body { height: 100%; margin: 0;}
 }
 #Indonesia{
     top: 45%;
-    right: 13%
+    right: 15%
 }
 .country-item{
     position: absolute;
     color: #fff;
 }
 .country-item__hero{
-    background-image: url('./assets/Countries/UnitedKingdomBg.png');
-    background-repeat: no-repeat;
-    background-size: contain;
     padding: 20%;
     min-width: 160%;
     transition: all 1s;
 }
-.country-item.selected .country-item__hero{
+.united-kingdom-bg{
+    background-image: url('./assets/Countries/UnitedKingdomBg.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.china-bg{
+    background-image: url('./assets/Countries/ChinaBg.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.philippines-bg{
+    background-image: url('./assets/Countries/PhilippinesBg.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.thailannd-bg{
+    background-image: url('./assets/Countries/ThailandBg.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.indonesia-bg{
+    background-image: url('./assets/Countries/IndonesiaBg.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.country-item.selected .united-kingdom-bg,
+.country-item.selected .china-bg,
+.country-item.selected .philippines-bg,
+.country-item.selected .thailannd-bg,
+.country-item.selected .indonesia-bg{
     background-image: url('./assets/Countries/selected.png');
 }
 #UnitedKingdom .country-item__hero{
