@@ -87,6 +87,10 @@ html,body { height: 100%; margin: 0;}
 .country-item__header{
     display: flex;
     align-items: center;
+    transform: translateX(12%);
+}
+#UnitedKingdom .country-item__header{
+    transform: translateX(3%);
 }
 .country-item__header img{
     width: 62px;
@@ -95,8 +99,11 @@ html,body { height: 100%; margin: 0;}
 .country-item__description{
     padding-left: 3%;
     transition: all 0.75s ease-in-out;
-    transform: scaleY(0);
+    transform: scaleY(0) translateX(10%);
     transform-origin: top;
+}
+#UnitedKingdom .country-item__description{
+    transform: scaleY(1) translateX(0%);
 }
 .country-item__line{
     margin: 0;
@@ -107,7 +114,10 @@ html,body { height: 100%; margin: 0;}
     margin-right: 5px;
 }
 .selected .country-item__description{
-    transform: scaleY(1);
+    transform: scaleY(1) translateX(10%);
+}
+#UnitedKingdom .selected.country-item__description{
+    transform: scaleY(1) translateX(3%);
 }
 .country-title{
     font-family: 'Poppins', sans-serif;
