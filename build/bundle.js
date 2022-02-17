@@ -43204,7 +43204,9 @@
 	}
 
 	function setSizes(){
-		let size = Math.min(document.getElementById(params.containerId).getBoundingClientRect().height / 2.0, document.getElementById(params.containerId).getBoundingClientRect().width);
+		const w = document.getElementById(params.containerId).getBoundingClientRect().width;
+		const h = document.getElementById(params.containerId).getBoundingClientRect().height;
+		let size = w > 800 ? Math.min(h / 2.0, w / 2.0) : w < 600 ? w * 0.65: w / 2.0;
 		params.sceneWidth = params.sceneHeight = size;
 		canvas.setAttribute('width', 	params.sceneWidth);
 		canvas.setAttribute('height', 	params.sceneHeight);
@@ -43283,6 +43285,7 @@
 		let newPosY = parseInt(touch.pageY);
 		mouseVector.x = ((newPosX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
 		mouseVector.y = - ((newPosY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
+		
 		//raycast
 		raycaster.setFromCamera(mouseVector, camera);
 		raycaster.layers.enableAll();
@@ -43313,7 +43316,7 @@
 		let newPosX = parseInt(touch.pageX);
 		let newPosY = parseInt(touch.pageY);
 		clickVector.x = ((newPosX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
-		clickVector.y = - ((newPosY - params.canvasPositionX) / params.sceneHeight) * 2 + 1;
+		clickVector.y = - ((newPosY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
 		
 		raycaster.setFromCamera(clickVector, camera);
 		raycaster.layers.enableAll();

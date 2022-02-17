@@ -7,10 +7,11 @@ html,body { height: 100%; margin: 0;}
     overflow: hidden;
 }
 #earthCanvas{
-    display: block;
-    margin: auto;
     padding: 0;
-    transform: translateY(40%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
 }
 #UnitedKingdom{
     top: 2%;
@@ -26,11 +27,11 @@ html,body { height: 100%; margin: 0;}
 }
 #China{
     top: 10%;
-    right: 20%;
+    right: 25%;
 }
 #Indonesia{
     top: 45%;
-    right: 15%
+    right: 20%
 }
 .country-item{
     position: absolute;
@@ -137,6 +138,26 @@ html,body { height: 100%; margin: 0;}
     .country-item__line{
         margin-bottom: 20px;
     }
+    #UnitedKingdom{
+        top: 2%;
+        left: 12%;
+    }
+    #Thailand{
+        top: 30%;
+        left: 1%;
+    }
+    #Philippines{
+        top: 62%;
+        left: 10%;
+    }
+    #China{
+        top: 10%;
+        right: 23%;
+    }
+    #Indonesia{
+        top: 45%;
+        right: 15%
+    }
 }
 @media screen and (max-width: 768px) {
     .country-title{
@@ -149,11 +170,67 @@ html,body { height: 100%; margin: 0;}
     .country-item__line{
         margin-bottom: 10px;
     }
+    #UnitedKingdom{
+        top: 18%;
+        left: 5%;
+    }
+    #Thailand{
+        top: 40%;
+        left: 2%;
+    }
+    #Philippines{
+        top: 60%;
+        left: 10%;
+    }
+    #China{
+        top: 25%;
+        right: 14%;
+    }
+    #Indonesia{
+        top: 48%;
+        right: 11%;
+    }
+    .country-item__hero{
+        padding: 15%;
+        min-width: 120%;
+    }
+}
+@media screen and (max-width: 600px) {
+    #earthCanvas{
+        top: 5%;
+        left: auto;
+        right: 0;
+        transform: translateY(0%) translateX(0%);
+    }
+    #UnitedKingdom{
+        top: 0%;
+        left: 10%;
+    }
+    #Thailand{
+        top: 22%;
+        left: 2%;
+    }
+    #Philippines{
+        top: 38%;
+        left: 10%;
+    }
+    #China{
+        top: 44%;
+        right: 14%;
+    }
+    #Indonesia{
+        top: 55%;
+        right: auto;
+        left: 8%;
+    }
+    .country-item__hero{
+        padding: 2%;
+    }
 }
 @media screen and (max-width: 360px) {
     .country-title{
-        font-size: 14px;
-        line-height: 12px;
+        font-size: 12px;
+        line-height: 14px;
     }
     .country-text{
         font-size: 12px;
