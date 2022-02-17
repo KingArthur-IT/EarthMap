@@ -44,6 +44,7 @@ html,body { height: 100%; margin: 0;}
 }
 .selected .country-item__hero{
     padding: 10%;
+    padding-bottom: 17%;
     min-width: 160%;
     transition: all 0.75s ease-in-out;
 }
