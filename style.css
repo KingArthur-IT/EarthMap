@@ -103,7 +103,7 @@ html,body { height: 100%; margin: 0;}
     transform-origin: top;
 }
 #UnitedKingdom .country-item__description{
-    transform: scaleY(1) translateX(0%);
+    transform: scaleY(0) translateX(0%);
 }
 .country-item__line{
     margin: 0;
@@ -116,7 +116,7 @@ html,body { height: 100%; margin: 0;}
 .selected .country-item__description{
     transform: scaleY(1) translateX(10%);
 }
-#UnitedKingdom .selected.country-item__description{
+#UnitedKingdom.selected .country-item__description{
     transform: scaleY(1) translateX(3%);
 }
 .country-title{
