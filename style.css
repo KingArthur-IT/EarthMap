@@ -38,8 +38,8 @@ html,body { height: 100%; margin: 0;}
     color: #fff;
 }
 .country-item__hero{
-    padding: 5%;
-    min-width: 125%;
+    padding-left: 5%;
+    min-width: 110%;
     transition: all 0.75s ease-in-out;
 }
 .selected .country-item__hero{
@@ -132,6 +132,13 @@ html,body { height: 100%; margin: 0;}
     .country-item__line{
         margin-bottom: 20px;
     }
+    .country-item__header img{
+        width: 42px;
+        height: 42px;
+    }
+    .country-item__line span{
+        margin-right: 20px;
+    }
 }
 @media screen and (max-width: 1024px) {
     .country-title{
@@ -163,6 +170,13 @@ html,body { height: 100%; margin: 0;}
     #Indonesia{
         top: 45%;
         right: 15%
+    }
+    .country-item__header img{
+        width: 32px;
+        height: 32px;
+    }
+    .country-item__line span{
+        margin-right: 15px;
     }
 }
 @media screen and (max-width: 768px) {
@@ -199,6 +213,13 @@ html,body { height: 100%; margin: 0;}
     .country-item__hero{
         padding: 15%;
         min-width: 120%;
+    }
+    .country-item__header img{
+        width: 28px;
+        height: 28px;
+    }
+    .country-item__line span{
+        margin-right: 10px;
     }
 }
 @media screen and (max-width: 600px) {
@@ -243,5 +264,9 @@ html,body { height: 100%; margin: 0;}
     }
     .country-item__line{
         margin-bottom: 8px;
+    }
+    .country-item__header img{
+        width: 22px;
+        height: 22px;
     }
 }
