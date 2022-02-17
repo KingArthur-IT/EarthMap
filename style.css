@@ -26,19 +26,19 @@ html,body { height: 100%; margin: 0;}
     left: 15%;
 }
 #China{
-    top: 10%;
-    right: 25%;
+    top: 18%;
+    right: 22%;
 }
 #Indonesia{
-    top: 45%;
-    right: 20%
+    top: 50%;
+    right: 13%
 }
 .country-item{
     position: absolute;
     color: #fff;
 }
 .country-item__hero{
-    padding-left: 5%;
+    padding-left: 10%;
     min-width: 110%;
     transition: all 0.75s ease-in-out;
 }
@@ -169,7 +169,7 @@ html,body { height: 100%; margin: 0;}
     }
     #Indonesia{
         top: 45%;
-        right: 15%
+        right: 11%
     }
     .country-item__header img{
         width: 32px;
@@ -207,12 +207,12 @@ html,body { height: 100%; margin: 0;}
         right: 14%;
     }
     #Indonesia{
-        top: 48%;
+        top: 450;
         right: 11%;
     }
     .country-item__hero{
-        padding: 15%;
-        min-width: 120%;
+        padding: 5%;
+        min-width: 105%;
     }
     .country-item__header img{
         width: 28px;
