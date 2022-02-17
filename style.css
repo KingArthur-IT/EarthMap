@@ -224,6 +224,12 @@ html,body { height: 100%; margin: 0;}
         padding: 5%;
         min-width: 105%;
     }
+    .country-item__header{
+        transform: translateX(2%);
+    }
+    .selected .country-item__description{
+        transform: scaleY(1) translateX(0%);
+    }
     .country-item__header img{
         width: 28px;
         height: 28px;
