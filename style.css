@@ -148,12 +148,16 @@ html,body { height: 100%; margin: 0;}
     z-index: -1;
 }
 .selected .country-item__wrapper{
-    padding: 20%;
+    padding: 10%;
     width: 200%;
 }
 .country-item__hero{
     margin: auto;
     transition: all 0.75s ease-in-out;
+    transform: translateX(9%);
+}
+#UnitedKingdom .country-item__hero{
+   transform: translateX(2%);
 }
 .country-item__header{
     display: flex;
@@ -230,8 +234,60 @@ html,body { height: 100%; margin: 0;}
     .country-item__line span{
         margin-right: 15px;
     }
+    .country-item__wrapper{
+        width: 105%;
+    }
+    #UnitedKingdom{
+        top: 10%;
+        left: 12%;
+    }
+    #UnitedKingdom.selected{
+        top: 0%;
+        left: 3%;
+    }
+    #Thailand{
+        top: 37%;
+        left: 7%;
+    }
+    #Thailand.selected{
+        top: 20%;
+        left: 0%;
+    }
+    #Philippines{
+        top: 70%;
+        left: 15%;
+    }
+    #Philippines.selected{
+        top: 57%;
+        left: 2%;
+    }
+    #China{
+        top: 17%;
+        right: 12%;
+    }
+    #China.selected{
+        top: 7%;
+        right: 12%;
+    }
+    #Indonesia{
+        top: 50%;
+        right: 6%
+    }
+    #Indonesia.selected{
+        top: 50%;
+        right: 11%
+    }
 }
 @media screen and (max-width: 768px) {
+    .country-item__wrapper{
+        width: 100%;
+    }
+    .country-item__hero{
+        transform: translateX(2%);
+    }
+    #UnitedKingdom .country-item__hero{
+        transform: translateX(0%);
+     }
     .country-title{
         font-size: 16px;
     }
@@ -259,6 +315,86 @@ html,body { height: 100%; margin: 0;}
         left: auto;
         right: 0;
         transform: translateY(0%);
+    }
+    #UnitedKingdom{
+        top: 10%;
+        left: 12%;
+    }
+    #UnitedKingdom.selected{
+        top: 0%;
+        left: 3%;
+    }
+    #Thailand{
+        top: 25%;
+        left: 7%;
+    }
+    #Thailand.selected{
+        top: 17%;
+        left: 1%;
+    }
+    #Philippines{
+        top: 40%;
+        left: 15%;
+    }
+    #Philippines.selected{
+        top: 36%;
+        left: 12%;
+    }
+    #China{
+        top: 56%;
+        right: 15%;
+    }
+    #China.selected{
+        top: 56%;
+        right: 20%;
+    }
+    #Indonesia{
+        top: 62%;
+        right: auto;
+        left: 12%;
+    }
+    #Indonesia.selected{
+        top: 50%;
+        right: auto;
+        left: 6%;
+    }
+}
+@media screen and (max-width: 500px) {
+    #UnitedKingdom{
+        top: 8%;
+        left: 10%;
+    }
+    #UnitedKingdom.selected{
+        top: -1%;
+        left: 3%;
+    }
+}
+@media screen and (max-width: 425px) {
+    #Philippines{
+        top: 40%;
+        left: 15%;
+    }
+    #Philippines.selected{
+        top: 36%;
+        left: 5%;
+    }
+    #China{
+        top: 53%;
+        right: 5%;
+    }
+    #China.selected{
+        top: 50%;
+        right: 14%;
+    }
+    #Indonesia{
+        top: 62%;
+        right: auto;
+        left: 6%;
+    }
+    #Indonesia.selected{
+        top: 55%;
+        right: auto;
+        left: 1%;
     }
 }
 @media screen and (max-width: 360px) {

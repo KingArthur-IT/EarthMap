@@ -43139,10 +43139,10 @@
 			//Load texture and Create Earth Mesh
 			let textureLoader = new TextureLoader();
 			let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-				texture.minFilter = LinearFilter;			
+				texture.minFilter = LinearMipmapLinearFilter;			
 			});
 			const EarthGeometry = new SphereGeometry( 25, 32, 32 );
-			const EarthMaterial = new MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.7, side: DoubleSide } );
+			const EarthMaterial = new MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: DoubleSide } );
 			const EarthMesh = new Mesh( EarthGeometry, EarthMaterial );
 			EarthMesh.name = params.EarthMeshName;
 			scene.add( EarthMesh );
@@ -43226,7 +43226,7 @@
 	function setSizes(){
 		const w = document.getElementById(params.containerId).getBoundingClientRect().width;
 		const h = document.getElementById(params.containerId).getBoundingClientRect().height;
-		let size = w > 800 ? h * 0.9 : w < 600 ? w * 0.65: w / 2.0;
+		let size = w > 800 ? Math.min(h * 0.9, w * 0.9) : w < 600 ? w * 0.65: w / 2.0;
 		params.sceneWidth = params.sceneHeight = size;
 		canvas.setAttribute('width', 	params.sceneWidth);
 		canvas.setAttribute('height', 	params.sceneHeight);
@@ -43312,14 +43312,6 @@
 		raycaster.layers.enableAll();
 		let intersects = [];
 		raycaster.intersectObjects(scene.children, true, intersects);
-		//stop rotating on hover
-		const isEarth = (element) => element.object.name === params.EarthMeshName;
-		if (intersects.some(isEarth)){
-			earthParams.isHover = true;
-		} else {
-			earthParams.isHover = false;
-			earthParams.hoverValue = 1;
-		}
 		//change curson on country hover
 		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 			if (intersects.some((e) => e.object.name == countryName)){
@@ -43342,7 +43334,9 @@
 		let newPosY = parseInt(touch.pageY);
 		clickVector.x = ((newPosX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
 		clickVector.y = - ((newPosY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
-		
+		earthParams.isHover = false;
+		earthParams.hoverValue = 1;
+
 		raycaster.setFromCamera(clickVector, camera);
 		raycaster.layers.enableAll();
 		let intersects = [];
