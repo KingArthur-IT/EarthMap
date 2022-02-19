@@ -43181,19 +43181,19 @@
 			renderer.render(scene, camera);
 			window.addEventListener('resize', onWindowResize, false );
 			document.querySelector('#UnitedKingdom .country-item__header').addEventListener('click', () => {
-				params.currentSelectedCountry = params.currentSelectedCountry == 'UnitedKingdom' ? '' : 'UnitedKingdom';
+				params.currentSelectedCountry = idNodeHasClass('UnitedKingdom') ? '' : 'UnitedKingdom';
 			});
 			document.querySelector('#Thailand .country-item__header').addEventListener('click', () => {
-				params.currentSelectedCountry = params.currentSelectedCountry == 'Thailand' ? '' : 'Thailand';
+				params.currentSelectedCountry =idNodeHasClass('Thailand') ? '' : 'Thailand';
 			});
 			document.querySelector('#Philippines .country-item__header').addEventListener('click', () => {
-				params.currentSelectedCountry = params.currentSelectedCountry == 'Philippines' ? '' : 'Philippines';
+				params.currentSelectedCountry = idNodeHasClass('Philippines') ? '' : 'Philippines';
 			});
 			document.querySelector('#China .country-item__header').addEventListener('click', () => {
-				params.currentSelectedCountry = params.currentSelectedCountry == 'China' ? '' : 'China';
+				params.currentSelectedCountry = idNodeHasClass('China') ? '' : 'China';
 			});
 			document.querySelector('#Indonesia .country-item__header').addEventListener('click', () => {
-				params.currentSelectedCountry = params.currentSelectedCountry == 'Indonesia' ? '' : 'Indonesia';
+				params.currentSelectedCountry = idNodeHasClass('Indonesia') ? '' : 'Indonesia';
 			});
 			//mouse
 			canvas.addEventListener('mousemove', onMouseMove, false);
@@ -43211,10 +43211,15 @@
 						document.getElementById(countryName).classList.add("selected");
 					}
 				});
+				params.currentSelectedCountry = '';
 			});
 
 			animate();
 		}
+	}
+
+	function idNodeHasClass(id){
+		return document.getElementById(id)?.classList.contains('selected');
 	}
 
 	function setSizes(){

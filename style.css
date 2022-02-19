@@ -15,24 +15,49 @@ html,body { height: 100%; margin: 0;}
     transform: translateY(-50%) translateX(-50%);
 }
 #UnitedKingdom{
-    top: 2%;
+    transition: all 0.75s ease-in-out;
+    top: 5%;
     left: 15%;
+}
+#UnitedKingdom.selected{
+    top: -5%;
+    left: 3%;
 }
 #Thailand{
-    top: 30%;
+    transition: all 0.75s ease-in-out;
+    top: 37%;
     left: 7%;
 }
+#Thailand.selected{
+    top: 20%;
+    left: 0%;
+}
 #Philippines{
-    top: 60%;
+    transition: all 0.75s ease-in-out;
+    top: 70%;
     left: 15%;
 }
+#Philippines.selected{
+    top: 57%;
+    left: 6%;
+}
 #China{
-    top: 18%;
-    right: 22%;
+    transition: all 0.75s ease-in-out;
+    top: 15%;
+    right: 16%;
+}
+#China.selected{
+    top: 7%;
+    right: 14%;
 }
 #Indonesia{
+    transition: all 0.75s ease-in-out;
     top: 50%;
-    right: 13%
+    right: 10%
+}
+#Indonesia.selected{
+    top: 50%;
+    right: 15%
 }
 .country-item{
     position: absolute;
