@@ -78,7 +78,7 @@ class App {
 		//Load texture and Create Earth Mesh
 		let textureLoader = new THREE.TextureLoader();
 		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-			texture.minFilter = THREE.LinearMipmapLinearFilter;			
+			texture.minFilter = THREE.NearestMipmapLinearFilter;			
 		});
 		const EarthGeometry = new THREE.SphereGeometry( 25, 32, 32 );
 		const EarthMaterial = new THREE.MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: THREE.DoubleSide } );

@@ -43139,7 +43139,7 @@
 			//Load texture and Create Earth Mesh
 			let textureLoader = new TextureLoader();
 			let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-				texture.minFilter = LinearMipmapLinearFilter;			
+				texture.minFilter = NearestMipmapLinearFilter;			
 			});
 			const EarthGeometry = new SphereGeometry( 25, 32, 32 );
 			const EarthMaterial = new MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: DoubleSide } );
