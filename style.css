@@ -5,11 +5,12 @@ html,body { height: 100%; margin: 0;}
     background-image: url('./assets/bg.png');
     background-size: cover;
     overflow: hidden;
+    z-index: 0;
 }
 #earthCanvas{
     padding: 0;
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
 }
@@ -36,75 +37,113 @@ html,body { height: 100%; margin: 0;}
 .country-item{
     position: absolute;
     color: #fff;
+    z-index: 2;
+}
+.country-item__wrapper{
+    transition: all 0.75s ease-in-out;
+    padding: 0;
+    width: 120%;
+    position: relative;
+}
+.united-kingdom-bg::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -15%;
+    right: -5%;
+    background-image: url('./assets/Countries/UnitedKingdomBg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: all 0.75s ease-in-out;
+    z-index: -1;
+}
+.thailannd-bg::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -15%;
+    right: -5%;
+    background-image: url('./assets/Countries/ThailandBg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: all 0.75s ease-in-out;
+    z-index: -1;
+}
+.philippines-bg::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -15%;
+    right: -5%;
+    background-image: url('./assets/Countries/PhilippinesBg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: all 0.75s ease-in-out;
+    z-index: -1;
+}
+.china-bg::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -15%;
+    right: -5%;
+    background-image: url('./assets/Countries/ChinaBg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: all 0.75s ease-in-out;
+    z-index: -1;
+}
+.indonesia-bg::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -15%;
+    right: -5%;
+    background-image: url('./assets/Countries/IndonesiaBg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: all 0.75s ease-in-out;
+    z-index: -1;
+}
+.country-item.selected .united-kingdom-bg::after,
+.country-item.selected .thailannd-bg::after,
+.country-item.selected .philippines-bg::after,
+.country-item.selected .china-bg::after,
+.country-item.selected .indonesia-bg::after{
+    background-image: url('./assets/Countries/selected.png');
+    top: 0%;
+    bottom: 0%;
+    left: 0%;
+    right: 0%;
+    z-index: -1;
+}
+.selected .country-item__wrapper{
+    padding: 20%;
+    width: 200%;
 }
 .country-item__hero{
-    padding-left: 10%;
-    min-width: 110%;
+    margin: auto;
     transition: all 0.75s ease-in-out;
-}
-.selected .country-item__hero{
-    padding: 10%;
-    padding-bottom: 17%;
-    min-width: 160%;
-    transition: all 0.75s ease-in-out;
-}
-.united-kingdom-bg{
-    background-image: url('./assets/Countries/UnitedKingdomBg.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-.china-bg{
-    background-image: url('./assets/Countries/ChinaBg.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-.philippines-bg{
-    background-image: url('./assets/Countries/PhilippinesBg.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-.thailannd-bg{
-    background-image: url('./assets/Countries/ThailandBg.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-.indonesia-bg{
-    background-image: url('./assets/Countries/IndonesiaBg.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-.country-item.selected .united-kingdom-bg,
-.country-item.selected .china-bg,
-.country-item.selected .philippines-bg,
-.country-item.selected .thailannd-bg,
-.country-item.selected .indonesia-bg{
-    background-image: url('./assets/Countries/selected.png');
-}
-
-#UnitedKingdom .selected.country-item__hero{
-    padding: 15%;
-    min-width: 130%;
 }
 .country-item__header{
     display: flex;
     align-items: center;
-    transform: translateX(12%);
-}
-#UnitedKingdom .country-item__header{
-    transform: translateX(3%);
+    z-index: 2;
+    cursor: pointer;
 }
 .country-item__header img{
     width: 62px;
     height: 62px;
 }
 .country-item__description{
-    padding-left: 3%;
     transition: all 0.75s ease-in-out;
-    transform: scaleY(0) translateX(10%);
+    transform: scaleY(0);
     transform-origin: top;
-}
-#UnitedKingdom .country-item__description{
-    transform: scaleY(0) translateX(0%);
 }
 .country-item__line{
     margin: 0;
@@ -115,10 +154,7 @@ html,body { height: 100%; margin: 0;}
     margin-right: 5px;
 }
 .selected .country-item__description{
-    transform: scaleY(1) translateX(10%);
-}
-#UnitedKingdom.selected .country-item__description{
-    transform: scaleY(1) translateX(3%);
+    transform: scaleY(1);
 }
 .country-title{
     font-family: 'Poppins', sans-serif;
@@ -162,26 +198,6 @@ html,body { height: 100%; margin: 0;}
     .country-item__line{
         margin-bottom: 20px;
     }
-    #UnitedKingdom{
-        top: 2%;
-        left: 12%;
-    }
-    #Thailand{
-        top: 30%;
-        left: 1%;
-    }
-    #Philippines{
-        top: 62%;
-        left: 10%;
-    }
-    #China{
-        top: 10%;
-        right: 23%;
-    }
-    #Indonesia{
-        top: 45%;
-        right: 11%
-    }
     .country-item__header img{
         width: 32px;
         height: 32px;
@@ -201,35 +217,8 @@ html,body { height: 100%; margin: 0;}
     .country-item__line{
         margin-bottom: 10px;
     }
-    #UnitedKingdom{
-        top: 18%;
-        left: 5%;
-    }
-    #Thailand{
-        top: 40%;
-        left: 2%;
-    }
-    #Philippines{
-        top: 60%;
-        left: 10%;
-    }
-    #China{
-        top: 25%;
-        right: 14%;
-    }
-    #Indonesia{
-        top: 450;
-        right: 11%;
-    }
-    .country-item__hero{
-        padding: 5%;
-        min-width: 105%;
-    }
-    .country-item__header{
-        transform: translateX(2%);
-    }
     .selected .country-item__description{
-        transform: scaleY(1) translateX(0%);
+        transform: scaleY(1);
     }
     .country-item__header img{
         width: 28px;
@@ -244,31 +233,7 @@ html,body { height: 100%; margin: 0;}
         top: 5%;
         left: auto;
         right: 0;
-        transform: translateY(0%) translateX(0%);
-    }
-    #UnitedKingdom{
-        top: 0%;
-        left: 10%;
-    }
-    #Thailand{
-        top: 22%;
-        left: 2%;
-    }
-    #Philippines{
-        top: 38%;
-        left: 10%;
-    }
-    #China{
-        top: 44%;
-        right: 14%;
-    }
-    #Indonesia{
-        top: 55%;
-        right: auto;
-        left: 8%;
-    }
-    .country-item__hero{
-        padding: 2%;
+        transform: translateY(0%);
     }
 }
 @media screen and (max-width: 360px) {

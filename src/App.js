@@ -119,6 +119,21 @@ class App {
 
 		renderer.render(scene, camera);
 		window.addEventListener('resize', onWindowResize, false );
+		document.querySelector('#UnitedKingdom .country-item__header').addEventListener('click', () => {
+			params.currentSelectedCountry = params.currentSelectedCountry == 'UnitedKingdom' ? '' : 'UnitedKingdom';
+		})
+		document.querySelector('#Thailand .country-item__header').addEventListener('click', () => {
+			params.currentSelectedCountry = params.currentSelectedCountry == 'Thailand' ? '' : 'Thailand';
+		})
+		document.querySelector('#Philippines .country-item__header').addEventListener('click', () => {
+			params.currentSelectedCountry = params.currentSelectedCountry == 'Philippines' ? '' : 'Philippines';
+		})
+		document.querySelector('#China .country-item__header').addEventListener('click', () => {
+			params.currentSelectedCountry = params.currentSelectedCountry == 'China' ? '' : 'China';
+		})
+		document.querySelector('#Indonesia .country-item__header').addEventListener('click', () => {
+			params.currentSelectedCountry = params.currentSelectedCountry == 'Indonesia' ? '' : 'Indonesia';
+		})
 		//mouse
 		canvas.addEventListener('mousemove', onMouseMove, false);
 		canvas.addEventListener('mousedown', onMouseDown, false);
@@ -133,7 +148,6 @@ class App {
 				document.getElementById(countryName).classList.remove("selected");
 				if (countryName === params.currentSelectedCountry){
 					document.getElementById(countryName).classList.add("selected");
-					params.currentSelectedCountry = '';
 				}
 			})
 		})
@@ -145,7 +159,7 @@ class App {
 function setSizes(){
 	const w = document.getElementById(params.containerId).getBoundingClientRect().width;
 	const h = document.getElementById(params.containerId).getBoundingClientRect().height;
-	let size = w > 800 ? Math.min(h / 2.0, w / 2.0) : w < 600 ? w * 0.65: w / 2.0;
+	let size = w > 800 ? h * 0.9 : w < 600 ? w * 0.65: w / 2.0;
 	params.sceneWidth = params.sceneHeight = size;
 	canvas.setAttribute('width', 	params.sceneWidth);
 	canvas.setAttribute('height', 	params.sceneHeight);
@@ -201,11 +215,10 @@ function onMouseDown(event) {
 		earthParams.mouse.copy(clickVector);
 	};
 
-	//define click on country decal
+	//define click on country decal - toggle currentSelectedCountry val
 	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 		if (intersects.some((e) => e.object.name == countryName)){
-			params.currentSelectedCountry = countryName;
-			//document.getElementById(countryName).classList.add("selected");
+			params.currentSelectedCountry = params.currentSelectedCountry == countryName ? '' : countryName;
 		}
 	})
 }
