@@ -43084,7 +43084,8 @@
 			frameRotationValue: 0,
 			rotationDecreaseStep: 0.0005,
 			minRotationValue: 0.0075,
-			isHover: 1
+			isHover: false,
+			hoverValue: 1
 		},
 		countriesArray = [
 			{
@@ -43236,7 +43237,6 @@
 	function onMouseMove(event) {
 		//default values
 		document.body.style.cursor = 'default';
-		earthParams.isHover = 1;
 		//mouse vector
 		const mouseVector = new Vector2();
 		mouseVector.x = ((event.clientX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
@@ -43249,8 +43249,12 @@
 		//stop rotating on hover
 		const isEarth = (element) => element.object.name === params.EarthMeshName;
 		if (intersects.some(isEarth)){
-			earthParams.isHover = 0;
-		}	//change curson on country hover
+			earthParams.isHover = true;
+		} else {
+			earthParams.isHover = false;
+			earthParams.hoverValue = 1;
+		}
+		//change curson on country hover
 		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 			if (intersects.some((e) => e.object.name == countryName)){
 				document.body.style.cursor = 'pointer';
@@ -43258,7 +43262,7 @@
 		});
 		//move earth
 		if (earthParams.isActive){
-			earthParams.isHover = 1;
+			earthParams.hoverValue = 1;
 			earthParams.frameRotationValue = params.recreaseRotationRate * (mouseVector.x - earthParams.mouse.x);
 		}
 	}
@@ -43294,7 +43298,6 @@
 	function onTouchMove(e) {
 		//default values
 		document.body.style.cursor = 'default';
-		earthParams.isHover = 1;
 		//mouse vector
 		const mouseVector = new Vector2();
 		let evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
@@ -43312,8 +43315,12 @@
 		//stop rotating on hover
 		const isEarth = (element) => element.object.name === params.EarthMeshName;
 		if (intersects.some(isEarth)){
-			earthParams.isHover = 0;
-		}	//change curson on country hover
+			earthParams.isHover = true;
+		} else {
+			earthParams.isHover = false;
+			earthParams.hoverValue = 1;
+		}
+		//change curson on country hover
 		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 			if (intersects.some((e) => e.object.name == countryName)){
 				document.body.style.cursor = 'pointer';
@@ -43321,7 +43328,7 @@
 		});
 		//move earth
 		if (earthParams.isActive){
-			earthParams.isHover = 1;
+			earthParams.hoverValue = 1;
 			earthParams.frameRotationValue = params.recreaseRotationRate * (mouseVector.x - earthParams.mouse.x);
 		}
 	}
@@ -43369,7 +43376,9 @@
 			earthParams.frameRotationValue -= Math.sign(earthParams.frameRotationValue) * earthParams.rotationDecreaseStep;
 		}
 		let fixedRotationStep = (Math.sign(earthParams.frameRotationValue) >= 0 ? 1 : -1) * earthParams.minRotationValue;
-		scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.isHover;
+		if (earthParams.isHover) earthParams.hoverValue *= 0.96;
+		if (earthParams.hoverValue < 0.1) earthParams.hoverValue = 0;
+		scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.hoverValue;
 		
 		requestAnimationFrame(animate);
 		renderer.render(scene, camera);
