@@ -20,7 +20,7 @@ html,body { height: 100%; margin: 0;}
     left: 15%;
 }
 #UnitedKingdom.selected{
-    top: 0%;
+    top: -5%;
     left: 3%;
 }
 #Thailand{
@@ -30,7 +30,7 @@ html,body { height: 100%; margin: 0;}
 }
 #Thailand.selected{
     top: 20%;
-    left: 0%;
+    left: 2%;
 }
 #Philippines{
     transition: all 0.75s ease-in-out;
