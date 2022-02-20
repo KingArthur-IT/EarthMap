@@ -21,7 +21,7 @@ html,body { height: 100%; margin: 0;}
 }
 #UnitedKingdom.selected{
     top: -5%;
-    left: 3%;
+    left: 8%;
 }
 #Thailand{
     transition: all 0.75s ease-in-out;
@@ -29,7 +29,7 @@ html,body { height: 100%; margin: 0;}
     left: 7%;
 }
 #Thailand.selected{
-    top: 20%;
+    top: 25%;
     left: 2%;
 }
 #Philippines{
@@ -157,7 +157,7 @@ html,body { height: 100%; margin: 0;}
     transform: translateX(9%);
 }
 #UnitedKingdom .country-item__hero{
-   transform: translateX(2%);
+   transform: translateX(3%);
 }
 .country-item__header{
     display: flex;
@@ -242,15 +242,15 @@ html,body { height: 100%; margin: 0;}
         left: 12%;
     }
     #UnitedKingdom.selected{
-        top: 0%;
-        left: 3%;
+        top: 1%;
+        left: 4%;
     }
     #Thailand{
         top: 37%;
         left: 7%;
     }
     #Thailand.selected{
-        top: 20%;
+        top: 25%;
         left: 0%;
     }
     #Philippines{
@@ -342,7 +342,7 @@ html,body { height: 100%; margin: 0;}
     }
     #China{
         top: 56%;
-        right: 15%;
+        right: 10%;
     }
     #China.selected{
         top: 56%;
