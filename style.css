@@ -20,12 +20,12 @@ html,body { height: 100%; margin: 0;}
     left: 15%;
 }
 #UnitedKingdom.selected{
-    top: -5%;
+    top: -2%;
     left: 8%;
 }
 #Thailand{
     transition: all 0.75s ease-in-out;
-    top: 37%;
+    top: 38%;
     left: 7%;
 }
 #Thailand.selected{
@@ -419,7 +419,7 @@ html,body { height: 100%; margin: 0;}
         height: 22px;
     }
     #UnitedKingdom .country-item__wrapper{
-        width: 100%;
+        width: 105%;
     }
     .country-item__wrapper{
         width: 70%;
