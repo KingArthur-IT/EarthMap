@@ -418,4 +418,10 @@ html,body { height: 100%; margin: 0;}
         width: 22px;
         height: 22px;
     }
+    #UnitedKingdom .country-item__wrapper{
+        width: 100%;
+    }
+    .country-item__wrapper{
+        width: 70%;
+    }
 }
