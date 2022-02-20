@@ -368,6 +368,12 @@ html,body { height: 100%; margin: 0;}
         top: -1%;
         left: 3%;
     }
+    .country-item__hero{
+        transform: translateX(0%);
+    }
+    .selected .country-item__wrapper{
+        padding: 15%;
+    }
 }
 @media screen and (max-width: 425px) {
     #Philippines{

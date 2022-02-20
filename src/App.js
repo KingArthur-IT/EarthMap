@@ -78,7 +78,7 @@ class App {
 		//Load texture and Create Earth Mesh
 		let textureLoader = new THREE.TextureLoader();
 		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-			texture.minFilter = THREE.NearestMipmapLinearFilter;			
+			texture.minFilter = THREE.LinearMipMapLinearFilter //NearestMipmapLinearFilter;			
 		});
 		const EarthGeometry = new THREE.SphereGeometry( 25, 32, 32 );
 		const EarthMaterial = new THREE.MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: THREE.DoubleSide } );
@@ -226,7 +226,7 @@ function onMouseDown(event) {
 	//define click on country decal - toggle currentSelectedCountry val
 	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 		if (intersects.some((e) => e.object.name == countryName)){
-			params.currentSelectedCountry = params.currentSelectedCountry == countryName ? '' : countryName;
+			params.currentSelectedCountry = idNodeHasClass(countryName) ? '' : countryName;
 		}
 	})
 }

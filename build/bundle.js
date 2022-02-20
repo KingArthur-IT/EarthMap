@@ -75,6 +75,7 @@
 	const LinearFilter = 1006;
 	const LinearMipmapNearestFilter = 1007;
 	const LinearMipmapLinearFilter = 1008;
+	const LinearMipMapLinearFilter = 1008;
 	const UnsignedByteType = 1009;
 	const ByteType = 1010;
 	const ShortType = 1011;
@@ -43139,7 +43140,7 @@
 			//Load texture and Create Earth Mesh
 			let textureLoader = new TextureLoader();
 			let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-				texture.minFilter = NearestMipmapLinearFilter;			
+				texture.minFilter = LinearMipMapLinearFilter; //NearestMipmapLinearFilter;			
 			});
 			const EarthGeometry = new SphereGeometry( 25, 32, 32 );
 			const EarthMaterial = new MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: DoubleSide } );
@@ -43286,7 +43287,7 @@
 		//define click on country decal - toggle currentSelectedCountry val
 		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 			if (intersects.some((e) => e.object.name == countryName)){
-				params.currentSelectedCountry = params.currentSelectedCountry == countryName ? '' : countryName;
+				params.currentSelectedCountry = idNodeHasClass(countryName) ? '' : countryName;
 			}
 		});
 	}
