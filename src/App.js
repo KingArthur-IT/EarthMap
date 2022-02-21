@@ -280,6 +280,7 @@ function onMouseUp() {
 function onTouchMove(e) {
 	//default values
 	document.body.style.cursor = 'default';
+	document.getElementById('cursor-country').style.opacity = 0;
 	//mouse vector
 	const mouseVector = new THREE.Vector2();
 	let evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
@@ -334,8 +335,7 @@ function onTouchStart(e) {
 	//define click on country decal
 	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 		if (intersects.some((e) => e.object.name.includes(countryName))){
-			params.currentSelectedCountry = countryName;
-			//document.getElementById(countryName).classList.add("selected");
+			params.currentSelectedCountry = idNodeHasClass(countryName) ? '' : countryName;
 		}
 	})
 }
