@@ -72,10 +72,10 @@
 	const NearestFilter = 1003;
 	const NearestMipmapNearestFilter = 1004;
 	const NearestMipmapLinearFilter = 1005;
-	const NearestMipMapLinearFilter = 1005;
 	const LinearFilter = 1006;
 	const LinearMipmapNearestFilter = 1007;
 	const LinearMipmapLinearFilter = 1008;
+	const LinearMipMapLinearFilter = 1008;
 	const UnsignedByteType = 1009;
 	const ByteType = 1010;
 	const ShortType = 1011;
@@ -43086,7 +43086,8 @@
 			rotationDecreaseStep: 0.0005,
 			minRotationValue: 0.0075,
 			isHover: false,
-			hoverValue: 1
+			hoverValue: 1,
+			countryLabelPath: './assets/country-label.png'
 		},
 		countriesArray = [
 			{
@@ -43094,32 +43095,52 @@
 				coodsOnEarth: new Vector3(9.87, 2.24, -22.8),
 				normal: new Euler(0, 0, 0),
 				size: new Vector3(4, 4, 4),
-				imgPath: './assets/Countries/China.png'
+				imgPath: './assets/Countries/China.png',
+				pulseScaleValue: 1.0,
+				pulseAmplitude: 0.1,
+				pulseChangeStep: 0.001,
+				pulseDirection: 1
 			},
 			{
 				name: 'UnitedKingdom',
 				coodsOnEarth: new Vector3(21, 10.7, 9.96),
 				normal: new Euler(0, 0.6, 0),
 				size: new Vector3(4, 4, 4),
-				imgPath: './assets/Countries/UnitedKingdom.png'
+				imgPath: './assets/Countries/UnitedKingdom.png',
+				pulseScaleValue: 1.0,
+				pulseAmplitude: 0.1,
+				pulseChangeStep: 0.001,
+				pulseDirection: 1
 			},{
 				name: 'Indonesia',
 				coodsOnEarth: new Vector3(4.41, -8.48, -23.05),
 				normal: new Euler(0, 0, 0),
 				size: new Vector3(4, 4, 4),
-				imgPath: './assets/Countries/Indonesia.png'
+				imgPath: './assets/Countries/Indonesia.png',
+				pulseScaleValue: 1.0,
+				pulseAmplitude: 0.1,
+				pulseChangeStep: 0.001,
+				pulseDirection: 1
 			},{
 				name: 'Philippines',
 				coodsOnEarth: new Vector3(1.805, -4.96, -24.3),
 				normal: new Euler(0, 0, 0),
 				size: new Vector3(4, 4, 4),
-				imgPath: './assets/Countries/Philippines.png'
+				imgPath: './assets/Countries/Philippines.png',
+				pulseScaleValue: 1.0,
+				pulseAmplitude: 0.1,
+				pulseChangeStep: 0.001,
+				pulseDirection: 1
 			},{
 				name: 'Thailand',
 				coodsOnEarth: new Vector3(9.4, -3.71, -22.83),
 				normal: new Euler(0, 0, 0),
 				size: new Vector3(4, 4, 4),
-				imgPath: './assets/Countries/Thailand.png'
+				imgPath: './assets/Countries/Thailand.png',
+				pulseScaleValue: 1.0,
+				pulseAmplitude: 0.1,
+				pulseChangeStep: 0.001,
+				pulseDirection: 1
 			},
 		];
 
@@ -43140,7 +43161,8 @@
 			//Load texture and Create Earth Mesh
 			let textureLoader = new TextureLoader();
 			let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-				texture.minFilter = NearestMipMapLinearFilter; //NearestMipmapLinearFilter;			
+				texture.minFilter = NearestMipmapLinearFilter;	
+				texture.magFilter = NearestFilter;		
 			});
 			const EarthGeometry = new SphereGeometry( 25, 32, 32 );
 			const EarthMaterial = new MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: DoubleSide } );
@@ -43150,16 +43172,13 @@
 
 			//decal countries
 			countriesArray.forEach((countryObject) => {
-				let countryTexture = textureLoader.load(countryObject.imgPath, function (texture) {
-					texture.minFilter = LinearFilter;	
-					texture.wrapS = 1024,
-					texture.wrapT = 1024,
+				let countryTexture = textureLoader.load(earthParams.countryLabelPath, function (texture) {
+					texture.minFilter = LinearMipMapLinearFilter;	
 					texture.magFilter = NearestFilter;		
 				});
 				const decalMaterial = new MeshStandardMaterial({
 					map: countryTexture,
 					flatShading: false,
-					shininess: 30, 
 					transparent: true,
 					depthTest: true,
 					depthWrite: false,
@@ -43180,8 +43199,8 @@
 			});
 
 			//renderer
-			renderer = new WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-			renderer.setClearColor(0xffffff, 0);
+			renderer = new WebGLRenderer({ canvas: canvas, alpha: true, antialias: true, powerPreference: "high-performance", autoClear: true });
+			renderer.setPixelRatio(params.sceneWidth / params.sceneHeight);
 
 			renderer.render(scene, camera);
 			window.addEventListener('resize', onWindowResize, false );
@@ -43208,6 +43227,8 @@
 			canvas.addEventListener("touchmove", onTouchMove);    
 			canvas.addEventListener("touchstart", onTouchStart);
 			canvas.addEventListener("touchend",  onMouseUp);
+			//moveCountryLabel
+			document.getElementById('earthScene').addEventListener('mousemove', moveCountryLabel, false);
 			//toggle selected country
 			document.getElementById('earthScene').addEventListener('click', () => {
 				countriesArray.map((i) => {return i.name}).forEach((countryName) => {
@@ -43238,6 +43259,13 @@
 		params.canvasPositionY = canvas.getBoundingClientRect().top;
 	}
 
+	function moveCountryLabel(event){
+		const w = document.getElementById('cursor-country').offsetWidth; 
+		const h = document.getElementById('cursor-country').offsetHeight;
+		document.getElementById('cursor-country').style.top = (event.clientY - h/2) + 'px';
+		document.getElementById('cursor-country').style.left = (event.clientX - w/2) + 'px';
+	}
+
 	function onMouseMove(event) {
 		//default values
 		document.body.style.cursor = 'default';
@@ -43245,6 +43273,8 @@
 		const mouseVector = new Vector2();
 		mouseVector.x = ((event.clientX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
 		mouseVector.y = - ((event.clientY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
+
+		document.getElementById('cursor-country').style.opacity = 0;
 		//raycast
 		raycaster.setFromCamera(mouseVector, camera);
 		raycaster.layers.enableAll();
@@ -43259,9 +43289,11 @@
 			earthParams.hoverValue = 1;
 		}
 		//change curson on country hover
-		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
-			if (intersects.some((e) => e.object.name == countryName)){
+		countriesArray.forEach((country) => {
+			if (intersects.some((e) => e.object.name == country.name)){
 				document.body.style.cursor = 'pointer';
+				document.getElementById('cursor-country').src = country.imgPath;
+				document.getElementById('cursor-country').style.opacity = 1;
 			}
 		});
 		//move earth
@@ -43377,7 +43409,14 @@
 		if (earthParams.isHover) earthParams.hoverValue *= 0.96;
 		if (earthParams.hoverValue < 0.1) earthParams.hoverValue = 0;
 		scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.hoverValue;
-		
+		/*
+		countriesArray.forEach((country) => {
+			country.pulseScaleValue += country.pulseDirection * country.pulseChangeStep;
+			if (Math.abs(country.pulseScaleValue - country.pulseChangeStep) < country.pulseChangeStep)
+				country.pulseDirection *= -1;
+			scene.getObjectByName(country.name).scale.copy(new THREE.Vector3(country.pulseScaleValue, 1, country.pulseScaleValue));
+		});
+		*/
 		requestAnimationFrame(animate);
 		renderer.render(scene, camera);
 	}
