@@ -43151,9 +43151,12 @@
 			//decal countries
 			countriesArray.forEach((countryObject) => {
 				let countryTexture = textureLoader.load(countryObject.imgPath, function (texture) {
-					//texture.minFilter = THREE.NearestFilter;			
+					texture.minFilter = LinearFilter;	
+					texture.wrapS = 1024,
+					texture.wrapT = 1024,
+					texture.magFilter = NearestFilter;		
 				});
-				const decalMaterial = new MeshPhongMaterial({
+				const decalMaterial = new MeshStandardMaterial({
 					map: countryTexture,
 					flatShading: false,
 					shininess: 30, 

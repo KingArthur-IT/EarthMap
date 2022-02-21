@@ -89,9 +89,12 @@ class App {
 		//decal countries
 		countriesArray.forEach((countryObject) => {
 			let countryTexture = textureLoader.load(countryObject.imgPath, function (texture) {
-				//texture.minFilter = THREE.NearestFilter;			
+				texture.minFilter = THREE.LinearFilter;	
+				texture.wrapS = 1024,
+				texture.wrapT = 1024,
+				texture.magFilter = THREE.NearestFilter		
 			});
-			const decalMaterial = new THREE.MeshPhongMaterial({
+			const decalMaterial = new THREE.MeshStandardMaterial({
 				map: countryTexture,
 				flatShading: false,
 				shininess: 30, 
