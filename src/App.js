@@ -35,10 +35,8 @@ let raycaster = new THREE.Raycaster(),
 			normal: new THREE.Euler(0, 0, 0),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/China.png',
-			pulseScaleValue: 1.0,
-			pulseAmplitude: 0.1,
-			pulseChangeStep: 0.001,
-			pulseDirection: 1
+			pulseScaleValue: 5,
+			pulseDirection: -1
 		},
 		{
 			name: 'UnitedKingdom',
@@ -46,42 +44,41 @@ let raycaster = new THREE.Raycaster(),
 			normal: new THREE.Euler(0, 0.6, 0),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/UnitedKingdom.png',
-			pulseScaleValue: 1.0,
-			pulseAmplitude: 0.1,
-			pulseChangeStep: 0.001,
-			pulseDirection: 1
+			pulseScaleValue: 5,
+			pulseDirection: -1
 		},{
 			name: 'Indonesia',
 			coodsOnEarth: new THREE.Vector3(4.41, -8.48, -23.05),
 			normal: new THREE.Euler(0, 0, 0),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/Indonesia.png',
-			pulseScaleValue: 1.0,
-			pulseAmplitude: 0.1,
-			pulseChangeStep: 0.001,
-			pulseDirection: 1
+			pulseScaleValue: 5,
+			pulseDirection: -1
 		},{
 			name: 'Philippines',
 			coodsOnEarth: new THREE.Vector3(1.805, -4.96, -24.3),
 			normal: new THREE.Euler(0, 0, 0),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/Philippines.png',
-			pulseScaleValue: 1.0,
-			pulseAmplitude: 0.1,
-			pulseChangeStep: 0.001,
-			pulseDirection: 1
+			pulseScaleValue: 5,
+			pulseDirection: -1
 		},{
 			name: 'Thailand',
 			coodsOnEarth: new THREE.Vector3(9.4, -3.71, -22.83),
 			normal: new THREE.Euler(0, 0, 0),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/Thailand.png',
-			pulseScaleValue: 1.0,
-			pulseAmplitude: 0.1,
-			pulseChangeStep: 0.001,
-			pulseDirection: 1
+			pulseScaleValue: 5,
+			pulseDirection: -1
 		},
-	]
+	];
+let decals = {
+	array: [],
+	step: 0.01,
+	min: 0.8,
+	current: 0.8,
+	max: 1.1
+}
 
 class App {
 	init() {
@@ -109,8 +106,14 @@ class App {
 		EarthMesh.name = params.EarthMeshName;
 		scene.add( EarthMesh );
 
+		//scale koeff for decals
+		while (decals.current < decals.max) {
+			decals.array.push(decals.current);
+			decals.current += decals.step;
+		}
 		//decal countries
 		countriesArray.forEach((countryObject) => {
+			countryObject.pulseScaleValue = decals.array.length - 1;
 			let countryTexture = textureLoader.load(earthParams.countryLabelPath, function (texture) {
 				texture.minFilter = THREE.LinearMipMapLinearFilter;	
 				texture.magFilter = THREE.NearestFilter		
@@ -126,17 +129,20 @@ class App {
 				wireframe: false,
 				side: THREE.FrontSide
 			});
-			const decalGeometry = new DecalGeometry(
-				EarthMesh,
-				countryObject.coodsOnEarth,
-				countryObject.normal,
-				countryObject.size
-			);
-			const decalMesh = new THREE.Mesh(decalGeometry, decalMaterial);
-			decalMesh.name = countryObject.name;
-			EarthMesh.add(decalMesh);
-		});
 
+			for (let index = 0; index < decals.array.length; index++) {
+				const koeff = decals.array[index];
+				const decalGeometry = new DecalGeometry(
+					EarthMesh,
+					countryObject.coodsOnEarth,
+					countryObject.normal,
+					new THREE.Vector3(koeff * countryObject.size.x, koeff * countryObject.size.y, koeff * countryObject.size.z)
+				);
+				const decalMesh = new THREE.Mesh(decalGeometry, decalMaterial);
+				decalMesh.name = countryObject.name + index;
+				EarthMesh.add(decalMesh);
+			}
+		});
 		//renderer
 		renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true, powerPreference: "high-performance", autoClear: true });
 		renderer.setPixelRatio(params.sceneWidth / params.sceneHeight);
@@ -229,7 +235,7 @@ function onMouseMove(event) {
 	}
 	//change curson on country hover
 	countriesArray.forEach((country) => {
-		if (intersects.some((e) => e.object.name == country.name)){
+		if (intersects.some((e) => e.object.name.includes(country.name))){
 			document.body.style.cursor = 'pointer';
 			document.getElementById('cursor-country').src = country.imgPath;
 			document.getElementById('cursor-country').style.opacity = 1;
@@ -261,7 +267,7 @@ function onMouseDown(event) {
 
 	//define click on country decal - toggle currentSelectedCountry val
 	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
-		if (intersects.some((e) => e.object.name == countryName)){
+		if (intersects.some((e) => e.object.name.includes(countryName))){
 			params.currentSelectedCountry = idNodeHasClass(countryName) ? '' : countryName;
 		}
 	})
@@ -290,7 +296,7 @@ function onTouchMove(e) {
 	raycaster.intersectObjects(scene.children, true, intersects);
 	//change curson on country hover
 	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
-		if (intersects.some((e) => e.object.name == countryName)){
+		if (intersects.some((e) => e.object.name.includes(countryName))){
 			document.body.style.cursor = 'pointer'
 		}
 	})
@@ -327,7 +333,7 @@ function onTouchStart(e) {
 
 	//define click on country decal
 	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
-		if (intersects.some((e) => e.object.name == countryName)){
+		if (intersects.some((e) => e.object.name.includes(countryName))){
 			params.currentSelectedCountry = countryName;
 			//document.getElementById(countryName).classList.add("selected");
 		}
@@ -350,14 +356,19 @@ function animate() {
 	if (earthParams.isHover) earthParams.hoverValue *= 0.96;
 	if (earthParams.hoverValue < 0.1) earthParams.hoverValue = 0;
 	scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.hoverValue;
-	/*
+	
 	countriesArray.forEach((country) => {
-		country.pulseScaleValue += country.pulseDirection * country.pulseChangeStep;
-		if (Math.abs(country.pulseScaleValue - country.pulseChangeStep) < country.pulseChangeStep)
+		decals.array.forEach((element, index) => {
+			scene.getObjectByName(country.name + index).visible = false;
+		});
+		scene.getObjectByName(country.name + country.pulseScaleValue).visible = true;
+		country.pulseScaleValue += country.pulseDirection;
+		if (country.pulseScaleValue < 0 || country.pulseScaleValue > 29){
 			country.pulseDirection *= -1;
-		scene.getObjectByName(country.name).scale.copy(new THREE.Vector3(country.pulseScaleValue, 1, country.pulseScaleValue));
+			country.pulseScaleValue += country.pulseDirection; 
+		}
 	});
-	*/
+	
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 }
