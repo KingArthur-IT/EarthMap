@@ -78,7 +78,7 @@ class App {
 		//Load texture and Create Earth Mesh
 		let textureLoader = new THREE.TextureLoader();
 		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-			texture.minFilter = THREE.LinearMipMapLinearFilter //NearestMipmapLinearFilter;			
+			texture.minFilter = THREE.NearestMipMapLinearFilter //NearestMipmapLinearFilter;			
 		});
 		const EarthGeometry = new THREE.SphereGeometry( 25, 32, 32 );
 		const EarthMaterial = new THREE.MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: THREE.DoubleSide } );
@@ -89,7 +89,7 @@ class App {
 		//decal countries
 		countriesArray.forEach((countryObject) => {
 			let countryTexture = textureLoader.load(countryObject.imgPath, function (texture) {
-				texture.minFilter = THREE.LinearFilter;			
+				texture.minFilter = THREE.NearestFilter;			
 			});
 			const decalMaterial = new THREE.MeshPhongMaterial({
 				map: countryTexture,

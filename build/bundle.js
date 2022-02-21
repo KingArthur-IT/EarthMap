@@ -72,10 +72,10 @@
 	const NearestFilter = 1003;
 	const NearestMipmapNearestFilter = 1004;
 	const NearestMipmapLinearFilter = 1005;
+	const NearestMipMapLinearFilter = 1005;
 	const LinearFilter = 1006;
 	const LinearMipmapNearestFilter = 1007;
 	const LinearMipmapLinearFilter = 1008;
-	const LinearMipMapLinearFilter = 1008;
 	const UnsignedByteType = 1009;
 	const ByteType = 1010;
 	const ShortType = 1011;
@@ -43140,7 +43140,7 @@
 			//Load texture and Create Earth Mesh
 			let textureLoader = new TextureLoader();
 			let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-				texture.minFilter = LinearMipMapLinearFilter; //NearestMipmapLinearFilter;			
+				texture.minFilter = NearestMipMapLinearFilter; //NearestMipmapLinearFilter;			
 			});
 			const EarthGeometry = new SphereGeometry( 25, 32, 32 );
 			const EarthMaterial = new MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: DoubleSide } );
@@ -43151,7 +43151,7 @@
 			//decal countries
 			countriesArray.forEach((countryObject) => {
 				let countryTexture = textureLoader.load(countryObject.imgPath, function (texture) {
-					texture.minFilter = LinearFilter;			
+					texture.minFilter = NearestFilter;			
 				});
 				const decalMaterial = new MeshPhongMaterial({
 					map: countryTexture,
