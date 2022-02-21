@@ -43168,6 +43168,8 @@
 			scene.add( EarthMesh );
 
 			//scale koeff for decals
+			decals.array.push(0.4);//for label opacity == 1 on hover for UK
+			decals.array.push(0.15);
 			while (decals.current < decals.max) {
 				decals.array.push(decals.current);
 				decals.current += decals.step;
@@ -43277,8 +43279,8 @@
 		document.body.style.cursor = 'default';
 		//mouse vector
 		const mouseVector = new Vector2();
-		mouseVector.x = ((event.clientX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
-		mouseVector.y = - ((event.clientY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
+		mouseVector.x = ((event.offsetX) / params.sceneWidth) * 2 - 1;
+		mouseVector.y = - ((event.offsetY) / params.sceneHeight) * 2 + 1;
 
 		document.getElementById('cursor-country').style.opacity = 0;
 		//raycast
@@ -43296,10 +43298,14 @@
 		}
 		//change curson on country hover
 		countriesArray.forEach((country) => {
-			if (intersects.some((e) => e.object.name.includes(country.name))){
-				document.body.style.cursor = 'pointer';
+			if ((intersects.some((e) => e.object.name === country.name + "0" &&
+				country.name === "UnitedKingdom")) ||
+				(intersects.some((e) => e.object.name === country.name + "1" &&
+				country.name !== "UnitedKingdom")))
+			{
 				document.getElementById('cursor-country').src = country.imgPath;
 				document.getElementById('cursor-country').style.opacity = 1;
+				document.body.style.cursor = 'pointer';
 			}
 		});
 		//move earth
@@ -43422,7 +43428,7 @@
 			});
 			scene.getObjectByName(country.name + country.pulseScaleValue).visible = true;
 			country.pulseScaleValue += country.pulseDirection;
-			if (country.pulseScaleValue < 0 || country.pulseScaleValue > 29){
+			if (country.pulseScaleValue < 2 || country.pulseScaleValue > 30){
 				country.pulseDirection *= -1;
 				country.pulseScaleValue += country.pulseDirection; 
 			}
