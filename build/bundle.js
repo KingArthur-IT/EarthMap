@@ -43100,7 +43100,7 @@
 				imgPath: './assets/Countries/China.png',
 				pulseScaleValue: 5,
 				pulseDirection: -1,
-				pulseStep: 1
+				pulseStep: 2
 			},
 			{
 				name: 'UnitedKingdom',
@@ -43110,7 +43110,7 @@
 				imgPath: './assets/Countries/UnitedKingdom.png',
 				pulseScaleValue: 5,
 				pulseDirection: -1,
-				pulseStep: 1
+				pulseStep: 3
 			},{
 				name: 'Indonesia',
 				coodsOnEarth: new Vector3(4.41, -8.48, -23.05),
@@ -43119,7 +43119,7 @@
 				imgPath: './assets/Countries/Indonesia.png',
 				pulseScaleValue: 5,
 				pulseDirection: -1,
-				pulseStep: 1
+				pulseStep: 3
 			},{
 				name: 'Philippines',
 				coodsOnEarth: new Vector3(1.805, -4.96, -24.3),
@@ -43128,7 +43128,7 @@
 				imgPath: './assets/Countries/Philippines.png',
 				pulseScaleValue: 5,
 				pulseDirection: -1,
-				pulseStep: 1
+				pulseStep: 3
 			},{
 				name: 'Thailand',
 				coodsOnEarth: new Vector3(9.4, -3.71, -22.83),
@@ -43137,7 +43137,7 @@
 				imgPath: './assets/Countries/Thailand.png',
 				pulseScaleValue: 5,
 				pulseDirection: -1,
-				pulseStep: 1
+				pulseStep: 2
 			},
 		];
 	let decals = {
@@ -43146,8 +43146,7 @@
 		min: 0.7,
 		current: 0.7,
 		max: 1.1,
-		hoveredName: '',
-		maxSlideChangeVal: 2
+		hoveredName: ''
 	};
 
 	class App {
@@ -43210,7 +43209,6 @@
 			countriesArray.forEach((countryObject) => {
 				//decal params
 				countryObject.pulseScaleValue = Math.round(Math.random() * (decals.array.length - 1));
-				countryObject.pulseStep = Math.round(Math.random() * decals.maxSlideChangeVal) + 1;
 				//decal objects
 				let countryTexture = textureLoader.load(earthParams.countryLabelPath, function (texture) {
 					texture.minFilter = LinearMipMapLinearFilter;	
