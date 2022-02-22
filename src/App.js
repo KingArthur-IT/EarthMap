@@ -109,11 +109,11 @@ class App {
 		let textureLoader = new THREE.TextureLoader();
 		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
 			texture.minFilter = THREE.NearestFilter;	
-			texture.magFilter = THREE.NearestFilter		
+			texture.magFilter = THREE.NearestFilter	
 		});
 		let MeridiansTexture = textureLoader.load(params.MeridiansTextSrc, function (texture) {
-			texture.minFilter = THREE.LinearMipmapNearestFilter;	
-			texture.magFilter = THREE.NearestFilter		
+			texture.magFilter = THREE.NearestMipmapNearestFilter;
+			texture.anisotropy = 10	
 		});
 		const EarthGeometry = new THREE.SphereGeometry( 25, 32, 32 );
 		const EarthMaterial = new THREE.MeshBasicMaterial({ 
@@ -207,8 +207,6 @@ class App {
 		canvas.addEventListener("touchmove", onTouchMove);    
 		canvas.addEventListener("touchstart", onTouchStart);
 		canvas.addEventListener("touchend",  onMouseUp);
-		//moveCountryLabel
-		document.getElementById('earthScene').addEventListener('mousemove', moveCountryLabel, false)
 		//toggle selected country
 		document.getElementById('earthScene').addEventListener('click', () => {
 			countriesArray.map((i) => {return i.name}).forEach((countryName) => {
@@ -239,13 +237,6 @@ function setSizes(){
 	params.canvasPositionY = canvas.getBoundingClientRect().top;
 }
 
-function moveCountryLabel(event){
-	const w = document.getElementById('cursor-country').offsetWidth; 
-	const h = document.getElementById('cursor-country').offsetHeight;
-	document.getElementById('cursor-country').style.top = (event.clientY - h/2) + 'px';
-	document.getElementById('cursor-country').style.left = (event.clientX - w/2) + 'px';
-}
-
 function onMouseMove(event) {
 	//default values
 	document.body.style.cursor = 'default';
@@ -254,8 +245,6 @@ function onMouseMove(event) {
 	const mouseVector = new THREE.Vector2();
 	mouseVector.x = ((event.offsetX) / params.sceneWidth) * 2 - 1;
 	mouseVector.y = - ((event.offsetY) / params.sceneHeight) * 2 + 1;
-
-	document.getElementById('cursor-country').style.opacity = 0;
 	//raycast
 	raycaster.setFromCamera(mouseVector, camera);
 	raycaster.layers.enableAll()
@@ -321,7 +310,6 @@ function onMouseUp() {
 function onTouchMove(e) {
 	//default values
 	document.body.style.cursor = 'default';
-	document.getElementById('cursor-country').style.opacity = 0;
 	//mouse vector
 	const mouseVector = new THREE.Vector2();
 	let evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
@@ -393,6 +381,7 @@ function animate() {
 	if (Math.abs(earthParams.frameRotationValue) > earthParams.rotationDecreaseStep){
 		earthParams.frameRotationValue -= Math.sign(earthParams.frameRotationValue) * earthParams.rotationDecreaseStep;
 	}
+	else earthParams.frameRotationValue = earthParams.minRotationValue;
 	let fixedRotationStep = (Math.sign(earthParams.frameRotationValue) >= 0 ? 1 : -1) * earthParams.minRotationValue;
 	if (earthParams.isHover) earthParams.hoverValue *= 0.96;
 	if (earthParams.hoverValue < 0.1) earthParams.hoverValue = 0;

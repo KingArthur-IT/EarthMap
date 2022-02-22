@@ -7,16 +7,6 @@ html,body { height: 100%; margin: 0;}
     overflow: hidden;
     z-index: 0;
 }
-#cursor-country{
-    position: absolute;
-    z-index: 3;
-    opacity: 0;
-    width: 62px;
-    height: 62px;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-}
 #earthCanvas{
     padding: 0;
     position: absolute;
