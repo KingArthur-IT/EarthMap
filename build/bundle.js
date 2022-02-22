@@ -43146,7 +43146,7 @@
 		current: 0.8,
 		max: 1.1,
 		hoveredName: '',
-		maxSlideChangeVal: 3
+		maxSlideChangeVal: 2
 	};
 
 	class App {
