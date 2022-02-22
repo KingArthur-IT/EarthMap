@@ -43078,7 +43078,10 @@
 		canvasId: 'earthCanvas',
 		containerId: 'earthScene',
 		recreaseRotationRate: 0.1,
-		currentSelectedCountry: ''
+		currentSelectedCountry: '',
+		isEarthRotatingToTarget: false,
+		rotationTargetAngle: 0,
+		rotationTargetAngleStep: 0.025,
 	};
 	let raycaster = new Raycaster(), 
 		earthParams = {
@@ -43086,7 +43089,7 @@
 			mouse: new Vector2(),
 			frameRotationValue: 0,
 			rotationDecreaseStep: 0.0005,
-			minRotationValue: 0.0075,
+			minRotationValue: 0.005,
 			isHover: false,
 			hoverValue: 1,
 			countryLabelPath: './assets/country-label.png'
@@ -43173,10 +43176,10 @@
 				texture.magFilter = NearestFilter;	
 			});
 			let MeridiansTexture = textureLoader.load(params.MeridiansTextSrc, function (texture) {
-				texture.magFilter = NearestMipmapNearestFilter;
-				texture.anisotropy = 10;	
+				texture.minFilter = LinearMipMapLinearFilter;	
+				texture.magFilter = NearestFilter;
 			});
-			const EarthGeometry = new SphereGeometry( 25, 32, 32 );
+			const EarthGeometry = new SphereGeometry( 25, 64, 64 );
 			const EarthMaterial = new MeshBasicMaterial({ 
 				map: EarthTexture, 
 				transparent: true, 
@@ -43187,7 +43190,7 @@
 			EarthMesh.name = params.EarthMeshName;
 			EarthGroup.add(EarthMesh);
 			
-			const MeridiansMaterial = new MeshLambertMaterial({ 
+			const MeridiansMaterial = new MeshPhysicalMaterial({ 
 				map: MeridiansTexture, 
 				transparent: true, 
 				opacity: 0.8, 
@@ -43199,8 +43202,7 @@
 			scene.add( EarthGroup );
 
 			//scale koeff for decals
-			decals.array.push(0.4);//for label opacity == 1 on hover for UK - [0]
-			decals.array.push(0.15);//[1]
+			decals.array.push(1.2);
 			while (decals.current < decals.max) {
 				decals.array.push(decals.current);
 				decals.current += decals.step;
@@ -43240,7 +43242,7 @@
 				}
 			});
 			//renderer
-			renderer = new WebGLRenderer({ canvas: canvas, alpha: true, antialias: true, powerPreference: "high-performance", autoClear: true });
+			renderer = new WebGLRenderer({ canvas: canvas, alpha: true, antialias: true});
 			renderer.setPixelRatio(params.sceneWidth / params.sceneHeight);
 
 			renderer.render(scene, camera);
@@ -43270,11 +43272,27 @@
 			canvas.addEventListener("touchend",  onMouseUp);
 			//toggle selected country
 			document.getElementById('earthScene').addEventListener('click', () => {
+				params.isEarthRotatingToTarget = false;
 				countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 					document.getElementById(countryName).classList.remove("selected");
 					if (countryName === params.currentSelectedCountry){
 						document.getElementById(countryName).classList.add("selected");
-					}
+						params.isEarthRotatingToTarget = true;
+						if (countryName === 'UnitedKingdom')
+							params.rotationTargetAngle = 1.98;
+						else
+							params.rotationTargetAngle = 0.3;
+						decals.array.forEach((element, index) => {
+							scene.getObjectByName(countryName + index).material.color.r = 1;
+							scene.getObjectByName(countryName + index).material.color.g = 0.3;
+							scene.getObjectByName(countryName + index).material.color.b = 0.3;
+						});
+					} else 
+					decals.array.forEach((element, index) => {
+						scene.getObjectByName(countryName + index).material.color.r = 1;
+						scene.getObjectByName(countryName + index).material.color.g = 1;
+						scene.getObjectByName(countryName + index).material.color.b = 1;
+					});
 				});
 				params.currentSelectedCountry = '';
 			});
@@ -43301,7 +43319,7 @@
 	function onMouseMove(event) {
 		//default values
 		document.body.style.cursor = 'default';
-		decals.hoveredName = '';
+		params.currentSelectedCountry = '';
 		//mouse vector
 		const mouseVector = new Vector2();
 		mouseVector.x = ((event.offsetX) / params.sceneWidth) * 2 - 1;
@@ -43313,23 +43331,36 @@
 		raycaster.intersectObjects(scene.children, true, intersects);
 		//stop rotating on hover
 		const isEarth = (element) => element.object.name === params.EarthMeshName;
+		let onDecalHoverCountruName = '';
 		if (intersects.some(isEarth)){
 			earthParams.isHover = true;
+			//change curson on country hover
+			countriesArray.forEach((country) => {
+				if (intersects.some((e) => e.object.name === country.name + '0'))
+				{
+					document.body.style.cursor = 'pointer';
+					document.getElementById(country.name).classList.add("selected");
+					params.currentSelectedCountry = country.name;
+					onDecalHoverCountruName = country.name;
+					decals.array.forEach((element, index) => {
+						scene.getObjectByName(country.name + index).material.color.r = 1;
+						scene.getObjectByName(country.name + index).material.color.g = 0.3;
+						scene.getObjectByName(country.name + index).material.color.b = 0.3;
+					});
+				}
+			});
 		} else {
 			earthParams.isHover = false;
 			earthParams.hoverValue = 1;
 		}
-		//change curson on country hover
-		countriesArray.forEach((country) => {
-			if ((intersects.some((e) => e.object.name === country.name + "0" &&
-				country.name === "UnitedKingdom")) ||
-				(intersects.some((e) => e.object.name === country.name + "1" &&
-				country.name !== "UnitedKingdom")))
-			{
-				document.getElementById('cursor-country').src = country.imgPath;
-				document.getElementById('cursor-country').style.opacity = 1;
-				document.body.style.cursor = 'pointer';
-				decals.hoveredName = country.name;
+		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
+			if (onDecalHoverCountruName !== countryName){
+				document.getElementById(countryName).classList.remove("selected");
+				decals.array.forEach((element, index) => {
+					scene.getObjectByName(countryName + index).material.color.r = 1;
+					scene.getObjectByName(countryName + index).material.color.g = 1;
+					scene.getObjectByName(countryName + index).material.color.b = 1;
+				});
 			}
 		});
 		//move earth
@@ -43355,12 +43386,7 @@
 			earthParams.isActive = true;
 			earthParams.mouse.copy(clickVector);
 		}
-		//define click on country decal - toggle currentSelectedCountry val
-		countriesArray.map((i) => {return i.name}).forEach((countryName) => {
-			if (intersects.some((e) => e.object.name.includes(countryName))){
-				params.currentSelectedCountry = idNodeHasClass(countryName) ? '' : countryName;
-			}
-		});
+		params.currentSelectedCountry = '';
 	}
 
 	function onMouseUp() {
@@ -43437,31 +43463,45 @@
 
 	function animate() {
 		//Earth rotate
-		if (Math.abs(earthParams.frameRotationValue) > earthParams.rotationDecreaseStep){
-			earthParams.frameRotationValue -= Math.sign(earthParams.frameRotationValue) * earthParams.rotationDecreaseStep;
+		if (params.isEarthRotatingToTarget){
+			let normolizedCurrentAngle = scene.getObjectByName(params.EarthGroupName).rotation.y;
+			normolizedCurrentAngle = Math.abs(normolizedCurrentAngle) > 2 * Math.PI ? normolizedCurrentAngle % (2 * Math.PI) : normolizedCurrentAngle;
+			normolizedCurrentAngle = normolizedCurrentAngle < 0 ? normolizedCurrentAngle + 2 * Math.PI : normolizedCurrentAngle;
+			scene.getObjectByName(params.EarthGroupName).rotation.y = normolizedCurrentAngle;
+			let direction = 1;
+			if (Math.abs(params.rotationTargetAngle - normolizedCurrentAngle) < Math.PI)
+				direction = Math.sign(params.rotationTargetAngle - normolizedCurrentAngle);
+			else direction = Math.sign(Math.PI * 2 + params.rotationTargetAngle - normolizedCurrentAngle);
+			if (Math.abs(normolizedCurrentAngle - params.rotationTargetAngle) > params.rotationTargetAngleStep){
+				scene.getObjectByName(params.EarthGroupName).rotation.y += direction * params.rotationTargetAngleStep;
+			}
 		}
-		else earthParams.frameRotationValue = earthParams.minRotationValue;
-		let fixedRotationStep = (Math.sign(earthParams.frameRotationValue) >= 0 ? 1 : -1) * earthParams.minRotationValue;
-		if (earthParams.isHover) earthParams.hoverValue *= 0.96;
-		if (earthParams.hoverValue < 0.1) earthParams.hoverValue = 0;
-		scene.getObjectByName(params.EarthGroupName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.hoverValue;
+		else {
+			if (Math.abs(earthParams.frameRotationValue) > earthParams.rotationDecreaseStep){
+				earthParams.frameRotationValue -= Math.sign(earthParams.frameRotationValue) * earthParams.rotationDecreaseStep;
+			}
+			else earthParams.frameRotationValue = earthParams.minRotationValue;
+			let fixedRotationStep = (Math.sign(earthParams.frameRotationValue) >= 0 ? 1 : -1) * earthParams.minRotationValue;
+			if (earthParams.isHover) earthParams.hoverValue *= 0.96;
+			if (earthParams.hoverValue < 0.1) earthParams.hoverValue = 0;
+			scene.getObjectByName(params.EarthGroupName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.hoverValue;
+		}
+		
 		//pulse country decals
-		const MIN_SLIDE = 2, MAX_SLIDE = Math.round((decals.max - decals.min) / decals.step);
+		const MIN_SLIDE = 1, MAX_SLIDE = Math.round((decals.max - decals.min) / decals.step);
 		countriesArray.forEach((country) => {
 			decals.array.forEach((element, index) => {
 				scene.getObjectByName(country.name + index).visible = false;
 			});
-			if (decals.hoveredName !== country.name){
-				scene.getObjectByName(country.name + country.pulseScaleValue).visible = true;
-				country.pulseScaleValue += country.pulseStep * country.pulseDirection;
-				if (country.pulseScaleValue < MIN_SLIDE){
-					country.pulseDirection *= -1;
-					country.pulseScaleValue = MIN_SLIDE; 
-				}
-				if (country.pulseScaleValue > MAX_SLIDE){
-					country.pulseDirection *= -1;
-					country.pulseScaleValue = MAX_SLIDE; 
-				}
+			scene.getObjectByName(country.name + country.pulseScaleValue).visible = true;
+			country.pulseScaleValue += country.pulseStep * country.pulseDirection;
+			if (country.pulseScaleValue < MIN_SLIDE){
+				country.pulseDirection *= -1;
+				country.pulseScaleValue = MIN_SLIDE; 
+			}
+			if (country.pulseScaleValue > MAX_SLIDE){
+				country.pulseDirection *= -1;
+				country.pulseScaleValue = MAX_SLIDE; 
 			}
 		});
 		
