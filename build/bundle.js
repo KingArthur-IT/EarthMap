@@ -43071,7 +43071,8 @@
 		sceneHeight: 400,
 		canvasPositionX: 0,
 		canvasPositionY: 0,
-		EarthTextSrc: './assets/EarthTexture.png',
+		EarthTextSrc: './assets/map.png',
+		MeridiansTextSrc: './assets/meridians.png',
 		EarthMeshName: 'EarthMesh',
 		EarthGroupName: 'EarthGroup',
 		canvasId: 'earthCanvas',
@@ -43141,9 +43142,9 @@
 		];
 	let decals = {
 		array: [],
-		step: 0.01,
-		min: 0.8,
-		current: 0.8,
+		step: 0.003,
+		min: 0.7,
+		current: 0.7,
 		max: 1.1,
 		hoveredName: '',
 		maxSlideChangeVal: 2
@@ -43169,11 +43170,15 @@
 			
 			let textureLoader = new TextureLoader();
 			let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
+				texture.minFilter = NearestFilter;	
+				texture.magFilter = NearestFilter;		
+			});
+			let MeridiansTexture = textureLoader.load(params.MeridiansTextSrc, function (texture) {
 				texture.minFilter = LinearMipmapNearestFilter;	
 				texture.magFilter = NearestFilter;		
 			});
 			const EarthGeometry = new SphereGeometry( 25, 32, 32 );
-			const EarthMaterial = new MeshLambertMaterial({ 
+			const EarthMaterial = new MeshBasicMaterial({ 
 				map: EarthTexture, 
 				transparent: true, 
 				opacity: 0.8, 
@@ -43182,6 +43187,15 @@
 			const EarthMesh = new Mesh( EarthGeometry, EarthMaterial );
 			EarthMesh.name = params.EarthMeshName;
 			EarthGroup.add(EarthMesh);
+			
+			const MeridiansMaterial = new MeshLambertMaterial({ 
+				map: MeridiansTexture, 
+				transparent: true, 
+				opacity: 0.8, 
+				side: DoubleSide, 
+			});
+			const MeridiansMesh = new Mesh( EarthGeometry, MeridiansMaterial );
+			EarthGroup.add(MeridiansMesh);
 
 			scene.add( EarthGroup );
 

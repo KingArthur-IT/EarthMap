@@ -10,7 +10,8 @@ let params = {
 	sceneHeight: 400,
 	canvasPositionX: 0,
 	canvasPositionY: 0,
-	EarthTextSrc: './assets/EarthTexture.png',
+	EarthTextSrc: './assets/map.png',
+	MeridiansTextSrc: './assets/meridians.png',
 	EarthMeshName: 'EarthMesh',
 	EarthGroupName: 'EarthGroup',
 	canvasId: 'earthCanvas',
@@ -80,9 +81,9 @@ let raycaster = new THREE.Raycaster(),
 	];
 let decals = {
 	array: [],
-	step: 0.01,
-	min: 0.8,
-	current: 0.8,
+	step: 0.003,
+	min: 0.7,
+	current: 0.7,
 	max: 1.1,
 	hoveredName: '',
 	maxSlideChangeVal: 2
@@ -108,11 +109,15 @@ class App {
 		
 		let textureLoader = new THREE.TextureLoader();
 		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
+			texture.minFilter = THREE.NearestFilter;	
+			texture.magFilter = THREE.NearestFilter		
+		});
+		let MeridiansTexture = textureLoader.load(params.MeridiansTextSrc, function (texture) {
 			texture.minFilter = THREE.LinearMipmapNearestFilter;	
 			texture.magFilter = THREE.NearestFilter		
 		});
 		const EarthGeometry = new THREE.SphereGeometry( 25, 32, 32 );
-		const EarthMaterial = new THREE.MeshLambertMaterial({ 
+		const EarthMaterial = new THREE.MeshBasicMaterial({ 
 			map: EarthTexture, 
 			transparent: true, 
 			opacity: 0.8, 
@@ -121,6 +126,15 @@ class App {
 		const EarthMesh = new THREE.Mesh( EarthGeometry, EarthMaterial );
 		EarthMesh.name = params.EarthMeshName;
 		EarthGroup.add(EarthMesh);
+		
+		const MeridiansMaterial = new THREE.MeshLambertMaterial({ 
+			map: MeridiansTexture, 
+			transparent: true, 
+			opacity: 0.8, 
+			side: THREE.DoubleSide, 
+		});
+		const MeridiansMesh = new THREE.Mesh( EarthGeometry, MeridiansMaterial );
+		EarthGroup.add(MeridiansMesh);
 
 		scene.add( EarthGroup );
 
