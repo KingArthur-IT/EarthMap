@@ -12,6 +12,7 @@ let params = {
 	canvasPositionY: 0,
 	EarthTextSrc: './assets/EarthTexture.png',
 	EarthMeshName: 'EarthMesh',
+	EarthGroupName: 'EarthGroup',
 	canvasId: 'earthCanvas',
 	containerId: 'earthScene',
 	recreaseRotationRate: 0.1,
@@ -36,7 +37,8 @@ let raycaster = new THREE.Raycaster(),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/China.png',
 			pulseScaleValue: 5,
-			pulseDirection: -1
+			pulseDirection: -1,
+			pulseStep: 1
 		},
 		{
 			name: 'UnitedKingdom',
@@ -45,7 +47,8 @@ let raycaster = new THREE.Raycaster(),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/UnitedKingdom.png',
 			pulseScaleValue: 5,
-			pulseDirection: -1
+			pulseDirection: -1,
+			pulseStep: 1
 		},{
 			name: 'Indonesia',
 			coodsOnEarth: new THREE.Vector3(4.41, -8.48, -23.05),
@@ -53,7 +56,8 @@ let raycaster = new THREE.Raycaster(),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/Indonesia.png',
 			pulseScaleValue: 5,
-			pulseDirection: -1
+			pulseDirection: -1,
+			pulseStep: 1
 		},{
 			name: 'Philippines',
 			coodsOnEarth: new THREE.Vector3(1.805, -4.96, -24.3),
@@ -61,7 +65,8 @@ let raycaster = new THREE.Raycaster(),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/Philippines.png',
 			pulseScaleValue: 5,
-			pulseDirection: -1
+			pulseDirection: -1,
+			pulseStep: 1
 		},{
 			name: 'Thailand',
 			coodsOnEarth: new THREE.Vector3(9.4, -3.71, -22.83),
@@ -69,7 +74,8 @@ let raycaster = new THREE.Raycaster(),
 			size: new THREE.Vector3(4, 4, 4),
 			imgPath: './assets/Countries/Thailand.png',
 			pulseScaleValue: 5,
-			pulseDirection: -1
+			pulseDirection: -1,
+			pulseStep: 1
 		},
 	];
 let decals = {
@@ -77,7 +83,9 @@ let decals = {
 	step: 0.01,
 	min: 0.8,
 	current: 0.8,
-	max: 1.1
+	max: 1.1,
+	hoveredName: '',
+	maxSlideChangeVal: 3
 }
 
 class App {
@@ -95,32 +103,45 @@ class App {
 		scene.add(light);
 
 		//Load texture and Create Earth Mesh
+		const EarthGroup = new THREE.Object3D();
+		EarthGroup.name = params.EarthGroupName;
+		
 		let textureLoader = new THREE.TextureLoader();
 		let EarthTexture = textureLoader.load(params.EarthTextSrc, function (texture) {
-			texture.minFilter = THREE.NearestMipmapLinearFilter;	
+			texture.minFilter = THREE.LinearMipmapNearestFilter;	
 			texture.magFilter = THREE.NearestFilter		
 		});
 		const EarthGeometry = new THREE.SphereGeometry( 25, 32, 32 );
-		const EarthMaterial = new THREE.MeshBasicMaterial( { map: EarthTexture, transparent: true, opacity: 0.8, side: THREE.DoubleSide } );
+		const EarthMaterial = new THREE.MeshLambertMaterial({ 
+			map: EarthTexture, 
+			transparent: true, 
+			opacity: 0.8, 
+			side: THREE.DoubleSide, 
+		});
 		const EarthMesh = new THREE.Mesh( EarthGeometry, EarthMaterial );
 		EarthMesh.name = params.EarthMeshName;
-		scene.add( EarthMesh );
+		EarthGroup.add(EarthMesh);
+
+		scene.add( EarthGroup );
 
 		//scale koeff for decals
-		decals.array.push(0.4)//for label opacity == 1 on hover for UK
-		decals.array.push(0.15)
+		decals.array.push(0.4)//for label opacity == 1 on hover for UK - [0]
+		decals.array.push(0.15)//[1]
 		while (decals.current < decals.max) {
 			decals.array.push(decals.current);
 			decals.current += decals.step;
 		}
 		//decal countries
 		countriesArray.forEach((countryObject) => {
-			countryObject.pulseScaleValue = decals.array.length - 1;
+			//decal params
+			countryObject.pulseScaleValue = Math.round(Math.random() * (decals.array.length - 1));
+			countryObject.pulseStep = Math.round(Math.random() * decals.maxSlideChangeVal) + 1;
+			//decal objects
 			let countryTexture = textureLoader.load(earthParams.countryLabelPath, function (texture) {
 				texture.minFilter = THREE.LinearMipMapLinearFilter;	
 				texture.magFilter = THREE.NearestFilter		
 			});
-			const decalMaterial = new THREE.MeshStandardMaterial({
+			const decalMaterial = new THREE.MeshBasicMaterial({
 				map: countryTexture,
 				flatShading: false,
 				transparent: true,
@@ -216,6 +237,7 @@ function moveCountryLabel(event){
 function onMouseMove(event) {
 	//default values
 	document.body.style.cursor = 'default';
+	decals.hoveredName = '';
 	//mouse vector
 	const mouseVector = new THREE.Vector2();
 	mouseVector.x = ((event.offsetX) / params.sceneWidth) * 2 - 1;
@@ -245,6 +267,7 @@ function onMouseMove(event) {
 			document.getElementById('cursor-country').src = country.imgPath;
 			document.getElementById('cursor-country').style.opacity = 1;
 			document.body.style.cursor = 'pointer';
+			decals.hoveredName = country.name;
 		}
 	})
 	//move earth
@@ -354,24 +377,31 @@ function onWindowResize() {
 }
 
 function animate() {
-	
+	//Earth rotate
 	if (Math.abs(earthParams.frameRotationValue) > earthParams.rotationDecreaseStep){
 		earthParams.frameRotationValue -= Math.sign(earthParams.frameRotationValue) * earthParams.rotationDecreaseStep;
 	}
 	let fixedRotationStep = (Math.sign(earthParams.frameRotationValue) >= 0 ? 1 : -1) * earthParams.minRotationValue;
 	if (earthParams.isHover) earthParams.hoverValue *= 0.96;
 	if (earthParams.hoverValue < 0.1) earthParams.hoverValue = 0;
-	scene.getObjectByName(params.EarthMeshName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.hoverValue;
-	
+	scene.getObjectByName(params.EarthGroupName).rotation.y += (earthParams.frameRotationValue + fixedRotationStep) * earthParams.hoverValue;
+	//pulse country decals
+	const MIN_SLIDE = 2, MAX_SLIDE = Math.round((decals.max - decals.min) / decals.step);
 	countriesArray.forEach((country) => {
 		decals.array.forEach((element, index) => {
 			scene.getObjectByName(country.name + index).visible = false;
 		});
-		scene.getObjectByName(country.name + country.pulseScaleValue).visible = true;
-		country.pulseScaleValue += country.pulseDirection;
-		if (country.pulseScaleValue < 2 || country.pulseScaleValue > 30){
-			country.pulseDirection *= -1;
-			country.pulseScaleValue += country.pulseDirection; 
+		if (decals.hoveredName !== country.name){
+			scene.getObjectByName(country.name + country.pulseScaleValue).visible = true;
+			country.pulseScaleValue += country.pulseStep * country.pulseDirection;
+			if (country.pulseScaleValue < MIN_SLIDE){
+				country.pulseDirection *= -1;
+				country.pulseScaleValue = MIN_SLIDE; 
+			}
+			if (country.pulseScaleValue > MAX_SLIDE){
+				country.pulseDirection *= -1;
+				country.pulseScaleValue = MAX_SLIDE; 
+			}
 		}
 	});
 	
