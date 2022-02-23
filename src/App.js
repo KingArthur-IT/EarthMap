@@ -27,7 +27,7 @@ let raycaster = new THREE.Raycaster(),
 		mouse: new THREE.Vector2(),
 		frameRotationValue: 0,
 		rotationDecreaseStep: 0.0005,
-		minRotationValue: 0.005,
+		minRotationValue: 0.0025,
 		isHover: false,
 		hoverValue: 1,
 		countryLabelPath: './assets/country-label.png'
@@ -87,7 +87,18 @@ let decals = {
 	min: 0.7,
 	current: 0.7,
 	max: 1.1,
-	hoveredName: ''
+	hoveredName: '',
+	hoverColor: {
+		r: 0.93,
+		g: 0.11,
+		b: 0.14
+	},
+	hoverEmissiveColor: {
+		intensity: 0.3,
+		r: 1,
+		g: 0,
+		b: 0
+	},
 }
 
 class App {
@@ -154,9 +165,8 @@ class App {
 				texture.minFilter = THREE.LinearMipMapLinearFilter;	
 				texture.magFilter = THREE.NearestFilter		
 			});
-			const decalMaterial = new THREE.MeshBasicMaterial({
+			const decalMaterial = new THREE.MeshStandardMaterial({
 				map: countryTexture,
-				flatShading: false,
 				transparent: true,
 				depthTest: true,
 				depthWrite: false,
@@ -220,17 +230,9 @@ class App {
 						params.rotationTargetAngle = 1.98;
 					else
 						params.rotationTargetAngle = 0.3;
-					decals.array.forEach((element, index) => {
-						scene.getObjectByName(countryName + index).material.color.r = 1;
-						scene.getObjectByName(countryName + index).material.color.g = 0.3;
-						scene.getObjectByName(countryName + index).material.color.b = 0.3;
-					});
+					setDecalColor(countryName, true);
 				} else 
-				decals.array.forEach((element, index) => {
-					scene.getObjectByName(countryName + index).material.color.r = 1;
-					scene.getObjectByName(countryName + index).material.color.g = 1;
-					scene.getObjectByName(countryName + index).material.color.b = 1;
-				});
+				setDecalColor(countryName, false);
 			})
 			params.currentSelectedCountry = '';
 		})
@@ -280,11 +282,7 @@ function onMouseMove(event) {
 				document.getElementById(country.name).classList.add("selected");
 				params.currentSelectedCountry = country.name;
 				onDecalHoverCountruName = country.name;
-				decals.array.forEach((element, index) => {
-					scene.getObjectByName(country.name + index).material.color.r = 1;
-					scene.getObjectByName(country.name + index).material.color.g = 0.3;
-					scene.getObjectByName(country.name + index).material.color.b = 0.3;
-				});
+				setDecalColor(country.name, true);
 			}
 		})
 	} else {
@@ -294,11 +292,7 @@ function onMouseMove(event) {
 	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
 		if (onDecalHoverCountruName !== countryName){
 			document.getElementById(countryName).classList.remove("selected");
-			decals.array.forEach((element, index) => {
-				scene.getObjectByName(countryName + index).material.color.r = 1;
-				scene.getObjectByName(countryName + index).material.color.g = 1;
-				scene.getObjectByName(countryName + index).material.color.b = 1;
-			});
+			setDecalColor(countryName, false)
 		}
 	})
 	//move earth
@@ -447,6 +441,28 @@ function animate() {
 	
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
+}
+
+function setDecalColor(decalName, isHover){
+	decals.array.forEach((element, index) => {
+		if (isHover){
+			scene.getObjectByName(decalName + index).material.color.r = decals.hoverColor.r;
+			scene.getObjectByName(decalName + index).material.color.g = decals.hoverColor.g;
+			scene.getObjectByName(decalName + index).material.color.b = decals.hoverColor.b;
+			scene.getObjectByName(decalName + index).material.emissive.r = decals.hoverEmissiveColor.r;
+			scene.getObjectByName(decalName + index).material.emissive.g = decals.hoverEmissiveColor.g;
+			scene.getObjectByName(decalName + index).material.emissive.b = decals.hoverEmissiveColor.b;
+			scene.getObjectByName(decalName + index).material.emissiveIntensity = decals.hoverEmissiveColor.intensity;
+		} else {
+			scene.getObjectByName(decalName + index).material.color.r = 1;
+			scene.getObjectByName(decalName + index).material.color.g = 1;
+			scene.getObjectByName(decalName + index).material.color.b = 1;
+			scene.getObjectByName(decalName + index).material.emissive.r = 1;
+			scene.getObjectByName(decalName + index).material.emissive.g = 1;
+			scene.getObjectByName(decalName + index).material.emissive.b = 1;
+			scene.getObjectByName(decalName + index).material.emissiveIntensity = 0;
+		}
+	});
 }
 
 export default App;

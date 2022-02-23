@@ -1,4 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve'; // locate and bundle dependencies in node_modules 
+import { terser } from "rollup-plugin-terser";
 
 export default {
 	input: 'src/main.js',
@@ -9,5 +10,5 @@ export default {
 			file: 'build/bundle.js'
 		}
 	],
-	plugins: [ resolve() ]
+	plugins: [ resolve(), terser() ]
 };
