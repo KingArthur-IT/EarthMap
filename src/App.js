@@ -195,6 +195,8 @@ class App {
 				EarthMesh.add(decalMesh);
 			}
 		});
+
+		animate();
 		
 		window.addEventListener('resize', onWindowResize, false );
 		document.querySelector('#UnitedKingdom .country-item__header').addEventListener('click', () => {
@@ -238,8 +240,6 @@ class App {
 			})
 			params.currentSelectedCountry = '';
 		})
-
-		animate();
 	}
 }
 
