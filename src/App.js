@@ -115,6 +115,12 @@ class App {
 		const light = new THREE.AmbientLight(0xffffff);
 		scene.add(light);
 
+		//renderer
+		renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true});
+		renderer.setPixelRatio(params.sceneWidth / params.sceneHeight);
+
+		renderer.render(scene, camera);
+
 		//Load texture and Create Earth Mesh
 		const EarthGroup = new THREE.Object3D();
 		EarthGroup.name = params.EarthGroupName;
@@ -189,11 +195,7 @@ class App {
 				EarthMesh.add(decalMesh);
 			}
 		});
-		//renderer
-		renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true});
-		renderer.setPixelRatio(params.sceneWidth / params.sceneHeight);
-
-		renderer.render(scene, camera);
+		
 		window.addEventListener('resize', onWindowResize, false );
 		document.querySelector('#UnitedKingdom .country-item__header').addEventListener('click', () => {
 			params.currentSelectedCountry = idNodeHasClass('UnitedKingdom') ? '' : 'UnitedKingdom';
