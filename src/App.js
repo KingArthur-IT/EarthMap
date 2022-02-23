@@ -87,7 +87,7 @@ let decals = {
 	min: 0.7,
 	current: 0.7,
 	max: 1.1,
-	hoveredName: '',
+	isClickedOnDecal: false,
 	hoverColor: {
 		r: 0.93,
 		g: 0.11,
@@ -229,12 +229,16 @@ class App {
 				document.getElementById(countryName).classList.remove("selected");
 				if (countryName === params.currentSelectedCountry){
 					document.getElementById(countryName).classList.add("selected");
-					params.isEarthRotatingToTarget = true;
-					if (countryName === 'UnitedKingdom')
-						params.rotationTargetAngle = 1.98;
-					else
-						params.rotationTargetAngle = 0.3;
 					setDecalColor(countryName, true);
+					//centrize if clicked not on decal
+					if (!decals.isClickedOnDecal){
+						params.isEarthRotatingToTarget = true;
+						if (countryName === 'UnitedKingdom')
+							params.rotationTargetAngle = 1.98;
+						else
+							params.rotationTargetAngle = 0.3;
+					}
+					decals.isClickedOnDecal = false;
 				} else 
 				setDecalColor(countryName, false);
 			})
@@ -279,24 +283,12 @@ function onMouseMove(event) {
 		//change curson on country hover
 		countriesArray.forEach((country) => {
 			if (intersects.some((e) => e.object.name === country.name + '0'))
-			{
 				document.body.style.cursor = 'pointer';
-				document.getElementById(country.name).classList.add("selected");
-				params.currentSelectedCountry = country.name;
-				onDecalHoverCountruName = country.name;
-				setDecalColor(country.name, true);
-			}
 		})
 	} else {
 		earthParams.isHover = false;
 		earthParams.hoverValue = 1;
 	}
-	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
-		if (onDecalHoverCountruName !== countryName){
-			document.getElementById(countryName).classList.remove("selected");
-			setDecalColor(countryName, false)
-		}
-	})
 	//move earth
 	if (earthParams.isActive){
 		earthParams.hoverValue = 1;
@@ -314,14 +306,19 @@ function onMouseDown(event) {
 	let intersects = []
 	raycaster.intersectObjects(scene.children, true, intersects);
 	
+	params.currentSelectedCountry = '';
 	//move earth only on click on it
 	const isEarth = (element) => element.object.name === params.EarthMeshName;
 	if (intersects.some(isEarth)){
 		earthParams.isActive = true;
 		earthParams.mouse.copy(clickVector);
+		countriesArray.forEach((country) => {
+			if (intersects.some((e) => e.object.name.includes(country.name))){
+				params.currentSelectedCountry = country.name;
+				decals.isClickedOnDecal = true;
+			}
+		})
 	};
-
-	params.currentSelectedCountry = '';
 }
 
 function onMouseUp() {
@@ -375,19 +372,20 @@ function onTouchStart(e) {
 	let intersects = []
 	raycaster.intersectObjects(scene.children, true, intersects);
 	
+	params.currentSelectedCountry = '';
 	//move earth only on click on it
 	const isEarth = (element) => element.object.name === params.EarthMeshName;
 	if (intersects.some(isEarth)){
+		
 		earthParams.isActive = true;
 		earthParams.mouse.copy(clickVector);
+		countriesArray.forEach((country) => {
+			if (intersects.some((e) => e.object.name.includes(country.name))){
+				params.currentSelectedCountry = country.name;
+				decals.isClickedOnDecal = true;
+			}
+		})
 	};
-
-	//define click on country decal
-	countriesArray.map((i) => {return i.name}).forEach((countryName) => {
-		if (intersects.some((e) => e.object.name.includes(countryName))){
-			params.currentSelectedCountry = idNodeHasClass(countryName) ? '' : countryName;
-		}
-	})
 }
 
 function onWindowResize() {
