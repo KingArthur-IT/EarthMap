@@ -9,8 +9,8 @@ let params = {
 	sceneHeight: 400,
 	canvasPositionX: 0,
 	canvasPositionY: 0,
-	EarthTextSrc: './assets/map.png',
-	MeridiansTextSrc: './assets/meridians.png',
+	EarthTextSrc: earthProjectUrl + '/assets/map.png',
+	MeridiansTextSrc: earthProjectUrl + '/assets/meridians.png',
 	EarthMeshName: 'EarthMesh',
 	EarthGroupName: 'EarthGroup',
 	canvasId: 'earthCanvas',
@@ -30,7 +30,7 @@ let raycaster = new THREE.Raycaster(),
 		minRotationValue: 0.0025,
 		isHover: false,
 		hoverValue: 1,
-		countryLabelPath: './assets/country-label.png'
+		countryLabelPath: earthProjectUrl + '/assets/country-label.png'
 	},
 	countriesArray = [
 		{
@@ -38,7 +38,7 @@ let raycaster = new THREE.Raycaster(),
 			coodsOnEarth: new THREE.Vector3(9.87, 2.24, -22.8),
 			normal: new THREE.Euler(0, 0, 0),
 			size: new THREE.Vector3(4, 4, 4),
-			imgPath: './assets/Countries/China.png',
+			imgPath: earthProjectUrl + '/assets/Countries/China.png',
 			pulseScaleValue: 5,
 			pulseDirection: -1,
 			pulseStep: 2
@@ -48,7 +48,7 @@ let raycaster = new THREE.Raycaster(),
 			coodsOnEarth: new THREE.Vector3(21, 10.7, 9.96),
 			normal: new THREE.Euler(0, 0.6, 0),
 			size: new THREE.Vector3(4, 4, 4),
-			imgPath: './assets/Countries/UnitedKingdom.png',
+			imgPath: earthProjectUrl + '/assets/Countries/UnitedKingdom.png',
 			pulseScaleValue: 5,
 			pulseDirection: -1,
 			pulseStep: 3
@@ -57,7 +57,7 @@ let raycaster = new THREE.Raycaster(),
 			coodsOnEarth: new THREE.Vector3(4.41, -8.48, -23.05),
 			normal: new THREE.Euler(0, 0, 0),
 			size: new THREE.Vector3(4, 4, 4),
-			imgPath: './assets/Countries/Indonesia.png',
+			imgPath: earthProjectUrl + '/assets/Countries/Indonesia.png',
 			pulseScaleValue: 5,
 			pulseDirection: -1,
 			pulseStep: 3
@@ -66,7 +66,7 @@ let raycaster = new THREE.Raycaster(),
 			coodsOnEarth: new THREE.Vector3(1.805, -4.96, -24.3),
 			normal: new THREE.Euler(0, 0, 0),
 			size: new THREE.Vector3(4, 4, 4),
-			imgPath: './assets/Countries/Philippines.png',
+			imgPath: earthProjectUrl + '/assets/Countries/Philippines.png',
 			pulseScaleValue: 5,
 			pulseDirection: -1,
 			pulseStep: 3
@@ -75,7 +75,7 @@ let raycaster = new THREE.Raycaster(),
 			coodsOnEarth: new THREE.Vector3(9.4, -3.71, -22.83),
 			normal: new THREE.Euler(0, 0, 0),
 			size: new THREE.Vector3(4, 4, 4),
-			imgPath: './assets/Countries/Thailand.png',
+			imgPath: earthProjectUrl + '/assets/Countries/Thailand.png',
 			pulseScaleValue: 5,
 			pulseDirection: -1,
 			pulseStep: 2
@@ -299,7 +299,7 @@ function onMouseMove(event) {
 function onMouseDown(event) {
 	const clickVector = new THREE.Vector2();
 	clickVector.x = ((event.clientX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
-	clickVector.y = - ((event.clientY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
+	clickVector.y = - (event.offsetY / params.sceneHeight) * 2 + 1;
 	
 	raycaster.setFromCamera(clickVector, camera);
 	raycaster.layers.enableAll()
@@ -356,14 +356,15 @@ function onTouchMove(e) {
 }
 
 function onTouchStart(e) {
+	const canvasTopPos = document.getElementById('earthScene').offsetTop;
 	//mouse vector
 	const clickVector = new THREE.Vector2();
 	let evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
 	let touch = evt.touches[0] || evt.changedTouches[0];
 	let newPosX = parseInt(touch.pageX);
-	let newPosY = parseInt(touch.pageY);
+	let newPosY = parseInt(touch.pageY) - canvasTopPos;
 	clickVector.x = ((newPosX - params.canvasPositionX) / params.sceneWidth) * 2 - 1;
-	clickVector.y = - ((newPosY - params.canvasPositionY) / params.sceneHeight) * 2 + 1;
+	clickVector.y = - (newPosY / params.sceneHeight) * 2 + 1;
 	earthParams.isHover = false;
 	earthParams.hoverValue = 1;
 
